@@ -5,4 +5,11 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Nancy" Version="2.0.0-Pre1891" />
+    <PackageReference Include="Nancy.Authentication.Stateless" Version="2.0.0-Pre1891" />
+    <PackageReference Include="Nancy.Hosting.Self" Version="2.0.0-Pre1891" />
+    <PackageReference Include="Nancy.Owin" Version="2.0.0-Pre1891" />
+  </ItemGroup>
+
 </Project>
