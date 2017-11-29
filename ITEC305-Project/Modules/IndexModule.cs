@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Nancy;
@@ -12,12 +12,15 @@ namespace ITEC305_Project.Modules
     {
 		public IndexModule()
 		{
+			Console.WriteLine("INDEX");
 			StatelessAuthentication.Enable(this, ITEC305Project.StatelessConfig);
 			this.RequiresAuthentication();
 			Get("/", _ =>
 			{
-				Console.WriteLine((Context?.CurrentUser as UserIdenity).UserName);
-				return View["index", new { user = Context.CurrentUser}];
+				Console.WriteLine("GET");
+				Console.WriteLine((Context?.CurrentUser as UserIdenity)?.UserName);
+				return "index";
+				//return View["index", new { user = Context.CurrentUser}];
 			});
 		}
 	}

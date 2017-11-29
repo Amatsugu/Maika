@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Nancy;
@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace ITEC305_Project.Models
 {
-    class UserIdenity : ClaimsPrincipal
+    public class UserIdenity : ClaimsPrincipal
     {
 		public ulong Id { get; set; }
 		public string UserName { get; set; }

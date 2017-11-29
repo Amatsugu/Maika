@@ -1,10 +1,11 @@
-﻿using Nancy.Authentication.Stateless;
+using Nancy.Authentication.Stateless;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Claims;
 using ITEC305_Project.Models;
+using ITEC305_Project.Auth;
 
 namespace ITEC305_Project
 {
@@ -14,9 +15,9 @@ namespace ITEC305_Project
 		{
 			try
 			{
-				string ApiKey = nancyContext.Request.Cookies.First(c => c.Key == "Token").Value;
+				ulong ApiKey = ulong.Parse(nancyContext.Request.Cookies.First(c => c.Key == "Token").Value);
 				Console.WriteLine($"Login Token: {ApiKey}");
-				return GetUserFromToken(ApiKey); //TODO: Generate LoginTokens
+				return Authenticator.GetUser(ApiKey);
 			}
 			catch (Exception e)
 			{
@@ -31,11 +32,6 @@ namespace ITEC305_Project
 		}
 
 		internal static void CreateUser(LoginCredentialsModel user)
-		{
-			throw new NotImplementedException();
-		}
-
-		private static ClaimsPrincipal GetUserFromToken(string token)
 		{
 			throw new NotImplementedException();
 		}

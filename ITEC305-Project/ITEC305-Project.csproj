@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.1" />
     <PackageReference Include="Nancy" Version="2.0.0-Pre1891" />
     <PackageReference Include="Nancy.Authentication.Stateless" Version="2.0.0-Pre1891" />
+    <PackageReference Include="Nancy.Hosting.Self" Version="2.0.0-Pre1891" />
   </ItemGroup>
 
 </Project>
