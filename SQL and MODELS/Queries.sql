@@ -7,12 +7,13 @@ SELECT (email) FROM project.user WHERE username = 'test' AND password = 'test';
 -- Retrieve user.user_id, room.room_id, room.title, room.password, room.type --
 SELECT u.user_id, r.room_id, r.title, r.password, r.type
 FROM project.user u
-LEFT JOIN project.room r ON u.user_id = r.user_id
+LEFT JOIN project.room r ON u.user_id = r.user_id;
 
 -- Retrieve all room and which user is in what room --
 SELECT r.room_id, u.user_id
 FROM project.user u
 LEFT JOIN project.room r ON u.user_id = r.user_id
+WHERE room_id = 'e7d74670-d54d-11e7-9296-cec278b6b50a';
 
 
 
@@ -48,7 +49,7 @@ INSERT INTO project.room_member (room_id, user_id) VALUES ('e7d74670-d54d-11e7-9
 
 -----
 --- Update room owner --
-UPDATE project.room SET user_id = '1';
+UPDATE project.room SET user_id = 'c492f646-d54d-11e7-9296-cec278b6b50a' WHERE room_id = 'e7d74670-d54d-11e7-9296-cec278b6b50a';
 
 --- Number of members of a room --
 SELECT COUNT(room_id) AS Num_of_Members FROM project.room_member r WHERE room_id = 'e7d74670-d54d-11e7-9296-cec278b6b50a';
