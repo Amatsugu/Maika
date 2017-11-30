@@ -10,7 +10,7 @@ using Npgsql;
 
 namespace ITEC305_Project
 {
-	public static class Maika //TODO: Implement Database transactions
+	public static class Maika
 	{
 		public const string HOST = "maika.luminousvector.com";
 		private static readonly DBCredentials dBCredentials = DBCredentials.FromJSON("DB_Credentials.json");
@@ -82,12 +82,18 @@ namespace ITEC305_Project
 			{
 				using (var cmd = con.CreateCommand())
 				{
-					cmd.CommandText = $"SELECT username FROM project.user WHERE user_id = '{userId}'";
-					return new UserModel
+					cmd.CommandText = $"SELECT username FROM project.user WHERE user_id = '{userId}'";\
+					using (var reader = cmd.ExecuteReader())
 					{
-						Id = userId,
-						Username = Uri.UnescapeDataString(cmd.ExecuteScalar() as string)
-					};
+						if (!reader.HasRows)
+							return null;
+						reader.Read();
+						return new UserModel
+						{
+							Id = userId,
+							Username = Uri.UnescapeDataString(reader.GetString(0))
+						};
+					}
 				}
 			}
 		}
@@ -135,6 +141,8 @@ namespace ITEC305_Project
 					cmd.CommandText = $"SELECT title, owner_id FROM project.room WHERE room_id = '{roomId}'";
 					using (var reader = cmd.ExecuteReader())
 					{
+						if (!reader.HasRows)
+							return null;
 						reader.Read();
 						return new RoomModel
 						{
@@ -157,6 +165,8 @@ namespace ITEC305_Project
 					cmd.CommandText = $"SELECT u.user_id, u.username FROM project.user u LEFT JOIN project.room_member rm ON u.user_id = rm.user_id WHERE room_id = '{roomId }'";
 					using (var reader = cmd.ExecuteReader())
 					{
+						if (!reader.HasRows)
+							return null;
 						List<UserModel> users = new List<UserModel>();
 						while (reader.Read())
 						{

@@ -13,7 +13,14 @@ namespace ITEC305_Project.Modules
 		{
 			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
 			this.RequiresAuthentication();
-			Get("/", _ => View["room"]); //TODO: Room Model
+			Get("/{roomId}", args =>
+			{
+				var room = Maika.GetRoomInfo((string)args.roomId);
+				if (room != null)
+					return View["room", room];
+				else
+					return new Response { StatusCode = HttpStatusCode.NotFound };
+			});
 		}
     }
 }
