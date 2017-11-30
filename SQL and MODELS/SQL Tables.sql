@@ -10,10 +10,9 @@ CREATE TABLE "project"."user"
 CREATE TABLE "project"."room"
   (
      "room_id"  VARCHAR(50) NOT NULL,
-     "user_id"  VARCHAR(50) NOT NULL,
+     "owner_id"  VARCHAR(50) NOT NULL,
      "title"    VARCHAR(50) NOT NULL,
-     "password" VARCHAR(30) NOT NULL,
-     "type" bool DEFAULT false NOT NULL,
+     "is_public" bool DEFAULT false NOT NULL,
      PRIMARY KEY ("room_id")
   ) without oids;
   
@@ -31,7 +30,7 @@ CREATE TABLE "project"."invite"
   ) without oids;
   
 ALTER TABLE "project"."room"
-  ADD CONSTRAINT "user_id_FK_user" FOREIGN KEY ("user_id") REFERENCES
+  ADD CONSTRAINT "user_id_FK_user" FOREIGN KEY ("owner_id") REFERENCES
   "project"."user" ("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
   
 ALTER TABLE "project"."room_member"
@@ -55,7 +54,7 @@ INSERT INTO "project"."user" VALUES ('c492fa74-d54d-11e7-9296-cec278b6b50a', 'te
 -- ----------------------------
 -- Records of room
 -- ----------------------------
-INSERT INTO "project"."room" VALUES ('e7d74670-d54d-11e7-9296-cec278b6b50a', 'c492f646-d54d-11e7-9296-cec278b6b50a', 'title', '12345', 'false');
+INSERT INTO "project"."room" VALUES ('e7d74670-d54d-11e7-9296-cec278b6b50a', 'c492f646-d54d-11e7-9296-cec278b6b50a', 'title', 'false');
 
 -- ----------------------------
 -- Records of room_member
