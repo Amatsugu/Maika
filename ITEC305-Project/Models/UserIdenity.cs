@@ -4,19 +4,17 @@ using System.Text;
 using Nancy;
 using Nancy.Security;
 using System.Security.Claims;
+using System.Security.Principal;
 
 namespace ITEC305_Project.Models
 {
-    public class UserIdenity : ClaimsPrincipal
+    public class UserPrincipal : ClaimsPrincipal
     {
-		public ulong Id { get; set; }
-		public string UserName { get; set; }
+		public string Id { get; set; }
 
-
-		public UserIdenity(ulong id, string username)
+		public UserPrincipal(string id, string username) : base(new GenericIdentity(username, "stateless"))
 		{
 			Id = id;
-			UserName = username;
 		}
 	}
 }

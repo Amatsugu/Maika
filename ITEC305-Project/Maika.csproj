@@ -12,6 +12,7 @@
     <PackageReference Include="Nancy" Version="2.0.0-Pre1891" />
     <PackageReference Include="Nancy.Authentication.Stateless" Version="2.0.0-Pre1891" />
     <PackageReference Include="Nancy.Hosting.Self" Version="2.0.0-Pre1891" />
+    <PackageReference Include="Npgsql" Version="3.2.5" />
   </ItemGroup>
 
 </Project>

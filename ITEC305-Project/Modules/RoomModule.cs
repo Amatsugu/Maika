@@ -7,11 +7,11 @@ using Nancy.Authentication.Stateless;
 
 namespace ITEC305_Project.Modules
 {
-    public class Room : NancyModule
+    public class RoomModule : NancyModule
     {
-		public Room() : base("/r")
+		public RoomModule() : base("/r")
 		{
-			StatelessAuthentication.Enable(this, ITEC305Project.StatelessConfig);
+			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
 			this.RequiresAuthentication();
 			Get("/", _ => View["room"]); //TODO: Room Model
 		}

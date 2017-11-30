@@ -14,6 +14,6 @@ namespace ITEC305_Project
 			Console.WriteLine($"Hosting on {uri}...");
 			Console.ReadLine();
 			host.Stop();
-        }
+		}
     }
 }
