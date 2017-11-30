@@ -22,7 +22,7 @@ namespace ITEC305_Project
 			return Convert.ToBase64String(hashBytes);
 		}
 
-		private static bool VerifyPassword(string password, string passwordHash)
+		public static bool VerifyPassword(string password, string passwordHash)
 		{
 			if (string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(passwordHash))
 				return false;

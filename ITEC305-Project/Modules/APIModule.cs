@@ -16,17 +16,18 @@ namespace ITEC305_Project.Modules
 			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
 			this.RequiresAuthentication();
 			//User
-			Get("/user/{userId}", args => Response.AsJson(Maika.GetUserInfo((string)args.userId)));
-			Get("/user/", args => Response.AsJson(Maika.GetUserInfo((Context.CurrentUser as UserPrincipal).Id)));
+			Get("/user/{userId}", args => Response.AsJson(Maika.GetUser((string)args.userId)));
+			Get("/user/", args => Response.AsJson(Maika.GetUser((Context.CurrentUser as UserPrincipal).Id)));
 			Post("/user/", args =>
 			{
 				if (Maika.SetUsername((Context.CurrentUser as UserPrincipal).Id, this.Bind<UserCredentialsModel>()))
 					return new Response { StatusCode = HttpStatusCode.OK };
 				else
 					return new Response { StatusCode = HttpStatusCode.NotAcceptable };
-			});	
+			});
 
 			//Room
+			Get("/room", args => Response.AsJson(Maika.CreateRoom((Context.CurrentUser as UserPrincipal).Id)));
 			Get("/room/{roomId}", args => Response.AsJson(Maika.GetRoomInfo((string)args.roomId)));
 			Get("/room/{roomId}/members", args => Response.AsJson(Maika.GetRoomMembers((string)args.roomId)));
 			Post("/room/{roomId}", args =>

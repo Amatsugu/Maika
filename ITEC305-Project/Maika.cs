@@ -31,11 +31,7 @@ namespace ITEC305_Project
 			}
 		});
 
-		internal static RoomModel CreateRoom(string ownerId)
-		{
-			throw new NotImplementedException();
-		}
-
+	
 		private static NpgsqlConnection GetConnection()
 		{
 			var conn = new NpgsqlConnection(dBCredentials.ConntectionString);
@@ -43,9 +39,23 @@ namespace ITEC305_Project
 			return conn;
 		}
 
-		internal static string ValidateUser(UserCredentialsModel login) //TODO: Validate User
+		internal static string ValidateUser(UserCredentialsModel login)
 		{
-			return Authenticator.Authenticate(new UserPrincipal(Authenticator.GenerateToken(), login.Username));
+			using (var con = GetConnection())
+			{
+				using (var cmd = con.CreateCommand())
+				{
+					cmd.CommandText = $"SELECT password, user_id FROM project.user WHERE email = '{Uri.EscapeDataString(login.Email)}'";
+					using (var reader = cmd.ExecuteReader())
+					{
+						reader.Read();
+						if (Utils.VerifyPassword(login.Password, reader.GetString(0)))
+							return Authenticator.Authenticate(new UserPrincipal(reader.GetString(1), login.Username));
+						else
+							return null;
+					}
+				}
+			}
 		}
 
 		internal static UserModel CreateUser(UserCredentialsModel user)
@@ -55,7 +65,7 @@ namespace ITEC305_Project
 				using (var cmd = con.CreateCommand())
 				{
 					var id = Authenticator.GenerateToken();
-					cmd.CommandText = $"INSERT INTO project.user (user_id, username, password, email) VALUES ('{id}', '{user.Username}', '{Utils.HashPassword(user.Password)}', '{user.Email}');";
+					cmd.CommandText = $"INSERT INTO project.user (user_id, username, password, email) VALUES ('{id}', '{Uri.EscapeDataString(user.Username)}', '{Utils.HashPassword(user.Password)}', '{Uri.EscapeDataString(user.Email)}');";
 					cmd.ExecuteNonQuery();
 					return new UserModel
 					{
@@ -66,7 +76,7 @@ namespace ITEC305_Project
 			}
 		}
 
-		internal static UserModel GetUserInfo(string userId)
+		internal static UserModel GetUser(string userId)
 		{
 			using (var con = GetConnection())
 			{
@@ -76,7 +86,7 @@ namespace ITEC305_Project
 					return new UserModel
 					{
 						Id = userId,
-						Username = cmd.ExecuteScalar() as string
+						Username = Uri.UnescapeDataString(cmd.ExecuteScalar() as string)
 					};
 				}
 			}
@@ -94,21 +104,26 @@ namespace ITEC305_Project
 			}
 		}
 
-		internal static string CreateInvite()
+		internal static string CreateInvite() //TODO: Create Invite
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static bool SetUsername(string userid, UserCredentialsModel username)
+		internal static bool SetUsername(string userid, UserCredentialsModel user)
 		{
 			using (var con = GetConnection())
 			{
 				using (var cmd = con.CreateCommand())
 				{
-					cmd.CommandText = $"UPDATE project.user SET username = '{username}' WHERE user_id = '{userid}'";
+					cmd.CommandText = $"UPDATE project.user SET username = '{Uri.EscapeDataString(user.Username)}' WHERE user_id = '{userid}'";
 					return cmd.ExecuteNonQuery() > 0;
 				}
 			}
+		}
+
+		internal static RoomModel CreateRoom(string ownerId) //TODO: Create Room
+		{
+			throw new NotImplementedException();
 		}
 
 		internal static RoomModel GetRoomInfo(string roomId)
@@ -124,8 +139,8 @@ namespace ITEC305_Project
 						return new RoomModel
 						{
 							Id = roomId,
-							Name = reader.GetString(0),
-							Owner = GetUserInfo(reader.GetString(1)),
+							Name = Uri.UnescapeDataString(reader.GetString(0)),
+							Owner = GetUser(reader.GetString(1)),
 							Members = GetRoomMembers(roomId)
 						};
 					}
@@ -148,7 +163,7 @@ namespace ITEC305_Project
 							users.Add(new UserModel
 							{
 								Id = reader.GetString(0),
-								Username = reader.GetString(1)
+								Username = Uri.UnescapeDataString(reader.GetString(1))
 							});
 						}
 						return users;
@@ -163,7 +178,7 @@ namespace ITEC305_Project
 			{
 				using (var cmd = con.CreateCommand())
 				{
-					cmd.CommandText = $"UPDATE project.room SET title = '{roomName}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
+					cmd.CommandText = $"UPDATE project.room SET title = '{Uri.EscapeDataString(roomName)}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
 					return cmd.ExecuteNonQuery() > 0;
 				}
 			}
