@@ -31,22 +31,40 @@ namespace ITEC305_Project.Modules
 			Get("/room/{roomId}/members", args => Response.AsJson(ITEC305Project.GetRoomMembers((string)args.roomId)));
 			Post("/room/{roomId}", args =>
 			{
-				if(ITEC305Project.SetRoomName((string)args.roomId, this.Bind<RoomModel>().Name))
+				if(ITEC305Project.SetRoomName((string)args.roomId, (Context.CurrentUser as UserPrincipal).Id, this.Bind<RoomModel>().Name))
 					return new Response { StatusCode = HttpStatusCode.OK };
 				else
 					return new Response { StatusCode = HttpStatusCode.NotAcceptable };
 			});
-			Delete("/room/{roomId}", args => ITEC305Project.CloseRoom((string)args.roomId));
-			Post("/room/{roomId}", args => ITEC305Project.SetOwner(args.roomId, args.userId)); //TODO: Model Binding
+			Delete("/room/{roomId}", args =>
+			{
+				if(ITEC305Project.CloseRoom((string)args.roomId, (Context.CurrentUser as UserPrincipal).Id))
+					return new Response { StatusCode = HttpStatusCode.OK };
+				else
+					return new Response { StatusCode = HttpStatusCode.NotAcceptable };
+			});
+			Post("/room/{roomId}", args =>
+			{
+				if(ITEC305Project.SetOwner((string)args.roomId, (Context.CurrentUser as UserPrincipal).Id, this.Bind<UserModel>().Username))
+					return new Response { StatusCode = HttpStatusCode.OK };
+				else
+					return new Response { StatusCode = HttpStatusCode.NotAcceptable };
+			});
 			Get("/room/{roomId}/canvas", args => null); //TODO: Canvas Transactions
 			Post("/room/{roomId}/canvas", args => null); //TODO: Canvas Transactions
 			Get("/room/{roomId}/chat", args => null); //TODO: Chat Transactions
 			Post("/room/{roomId}/chat", args => null); //TODO: Chat Transactions
 
 			//Invites
-			Get("/invite", args => null); //TODO: Create invite
+			Get("/invite", args => Response.AsJson(ITEC305Project.CreateInvite()));
 			Get("/invite/{inviteId}", args => null); //TODO: Is this useful?
-			Delete("/invite/{inviteId}", args => ITEC305Project.DeleteInvite(args.inviteId));
+			Delete("/invite/{inviteId}", args =>
+			{
+				if (ITEC305Project.DeleteInvite((string)args.inviteId))
+					return new Response { StatusCode = HttpStatusCode.OK };
+				else
+					return new Response { StatusCode = HttpStatusCode.NotAcceptable };
+			});
 
 
 		}

@@ -88,7 +88,12 @@ namespace ITEC305_Project
 			throw new NotImplementedException();
 		}
 
-		internal static bool DeleteInvite(string inviteId, string userId)
+		internal static bool DeleteInvite(string inviteId)
+		{
+			throw new NotImplementedException();
+		}
+
+		internal static string CreateInvite()
 		{
 			throw new NotImplementedException();
 		}
