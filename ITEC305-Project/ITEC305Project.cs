@@ -6,16 +6,19 @@ using System.Text;
 using System.Security.Claims;
 using ITEC305_Project.Models;
 using ITEC305_Project.Auth;
+using Npgsql;
 
 namespace ITEC305_Project
 {
 	class ITEC305Project //TODO: Implement Database transactions
 	{
+		public const string HOST = "itec305.luminousvector.com";
+
 		internal static StatelessAuthenticationConfiguration StatelessConfig { get; private set; } = new StatelessAuthenticationConfiguration(nancyContext =>
 		{
 			try
 			{
-				ulong ApiKey = ulong.Parse(nancyContext.Request.Cookies.First(c => c.Key == "Token").Value);
+				var ApiKey = nancyContext.Request.Cookies.First(c => c.Key == "Token").Value;
 				Console.WriteLine($"Login Token: {ApiKey}");
 				return Authenticator.GetUser(ApiKey);
 			}
@@ -26,9 +29,16 @@ namespace ITEC305_Project
 			}
 		});
 
-		internal static string ValidateUser(LoginCredentialsModel login)
+		private static NpgsqlConnection GetConnection()
 		{
-			throw new NotImplementedException();
+			var conn = new NpgsqlConnection(Credentials.ConntectionString);
+			conn.Open();
+			return conn;
+		}
+
+		internal static string ValidateUser(LoginCredentialsModel login) //TODO: Validate User
+		{
+			Authenticator.Authenticate(new UserIdenity(Authenticator.GenerateToken(), login.Username));
 		}
 
 		internal static void CreateUser(LoginCredentialsModel user)
@@ -36,7 +46,7 @@ namespace ITEC305_Project
 			throw new NotImplementedException();
 		}
 
-		internal static dynamic GetUserInfo(ulong id)
+		internal static dynamic GetUserInfo(string id)
 		{
 			throw new NotImplementedException();
 		}
@@ -46,37 +56,37 @@ namespace ITEC305_Project
 			throw new NotImplementedException();
 		}
 
-		internal static object SetUsername(ulong userid, string username)
+		internal static object SetUsername(string userid, string username)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object GetRoomInfo(ulong roomId)
+		internal static object GetRoomInfo(string roomId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object GetRoomMembers(ulong roomId)
+		internal static object GetRoomMembers(string roomId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object SetRoomName(ulong roomId, string roomName)
+		internal static object SetRoomName(string roomId, string roomName)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object CloseRoom(ulong roomId)
+		internal static object CloseRoom(string roomId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object SetOwner(ulong roomId, ulong userId)
+		internal static object SetOwner(string roomId, string userId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object DeleteInvite(ulong inviteId)
+		internal static object DeleteInvite(string inviteId)
 		{
 			throw new NotImplementedException();
 		}

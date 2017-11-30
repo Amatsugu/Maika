@@ -1,4 +1,4 @@
-﻿using ITEC305_Project.Models;
+using ITEC305_Project.Models;
 using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;

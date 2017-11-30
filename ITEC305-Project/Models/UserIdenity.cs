@@ -9,11 +9,11 @@ namespace ITEC305_Project.Models
 {
     public class UserIdenity : ClaimsPrincipal
     {
-		public ulong Id { get; set; }
+		public string Id { get; set; }
 		public string UserName { get; set; }
 
 
-		public UserIdenity(ulong id, string username)
+		public UserIdenity(string id, string username)
 		{
 			Id = id;
 			UserName = username;
