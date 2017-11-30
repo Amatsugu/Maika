@@ -31,7 +31,12 @@ namespace ITEC305_Project
             }
         });
 
-        private static NpgsqlConnection GetConnection()
+		internal static RoomModel CreateRoom(string ownerId)
+		{
+			throw new NotImplementedException();
+		}
+
+		private static NpgsqlConnection GetConnection()
         {
             var conn = new NpgsqlConnection(dBCredentials.ConntectionString);
             conn.Open();
@@ -49,15 +54,32 @@ namespace ITEC305_Project
             {
                 using (var cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = $"INSERT INTO project.user (user_id, username, password, email) VALUES ('', '{user.Username}', '{Utils.HashPassword(user.Password)}', '');";
-                    return cmd.ExecuteNonQuery();
+					var id = Authenticator.GenerateToken();
+					cmd.CommandText = $"INSERT INTO project.user (user_id, username, password, email) VALUES ('{id}', '{user.Username}', '{Utils.HashPassword(user.Password)}', '{user.Email}');";
+					cmd.ExecuteNonQuery();
+					return new UserModel
+					{
+						Username = user.Username,
+						Id = id
+					};
                 }
             }
         }
 
-        internal static UserModel GetUserInfo(string id)
+        internal static UserModel GetUserInfo(string userId)
         {
-            throw new NotImplementedException();
+			using (var con = GetConnection())
+			{
+				using (var cmd = con.CreateCommand())
+				{
+					cmd.CommandText = $"SELECT username FROM project.user WHERE user_id = '{userId}'";
+					return new UserModel
+					{
+						Id = userId,
+						Username = cmd.ExecuteScalar() as string
+					};
+				}
+			}
         }
 
         internal static bool CheckEmailExists(string email)
@@ -66,20 +88,25 @@ namespace ITEC305_Project
             {
                 using (var cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = $"SELECT username FROM project.user WHERE email = '{email}'";
-                    return cmd.ExecuteScalar();
+                    cmd.CommandText = $"COUNT (SELECT username FROM project.user WHERE email = '{email}')";
+                    return ((int)cmd.ExecuteScalar()) > 0;
                 }
             }
         }
 
-        internal static bool SetUsername(string userid, UserCredentialsModel username)
+		internal static string CreateInvite()
+		{
+			throw new NotImplementedException();
+		}
+
+		internal static bool SetUsername(string userid, UserCredentialsModel username)
         {
             using (var con = GetConnection())
             {
                 using (var cmd = con.CreateCommand())
                 {
                     cmd.CommandText = $"UPDATE project.user SET username = '{username}' WHERE user_id = '{userid}'";
-                    return cmd.ExecuteNonQuery();
+                    return cmd.ExecuteNonQuery() > 0;
                 }
             }
         }
@@ -90,20 +117,42 @@ namespace ITEC305_Project
             {
                 using (var cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = $"SELECT title, password, type FROM project.room WHERE room_id = '{roomId}'";
-                    return cmd.ExecuteReader().HasRows;
+                    cmd.CommandText = $"SELECT title, owner_id FROM project.room WHERE room_id = '{roomId}'";
+					using (var reader = cmd.ExecuteReader())
+					{
+						reader.Read();
+						return new RoomModel
+						{
+							Id = roomId,
+							Name = reader.GetString(0),
+							Owner = GetUserInfo(reader.GetString(1)),
+							Members = GetRoomMembers(roomId)
+						};
+					}
                 }
             }
         }
 
-        internal static UserModel[] GetRoomMembers(string roomId)
+        internal static List<UserModel> GetRoomMembers(string roomId)
         {
             using (var con = GetConnection())
             {
                 using (var cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = $"SELECT r.room_id, u.user_id FROM project.user u LEFT JOIN project.room r ON u.user_id = r.user_id WHERE room_id = '{roomId}'";
-                    return cmd.ExecuteReader().HasRows;
+                    cmd.CommandText = $"SELECT u.user_id, u.username FROM project.user u LEFT JOIN project.room_member rm ON u.user_id = rm.user_id WHERE room_id = '{roomId }'";
+					using (var reader = cmd.ExecuteReader())
+					{
+						List<UserModel> users = new List<UserModel>();
+						while(reader.Read())
+						{
+							users.Add(new UserModel
+							{
+								Id = reader.GetString(0),
+								Username = reader.GetString(1)
+							});
+						}
+						return users;
+					}
                 }
             }
         }
@@ -114,8 +163,8 @@ namespace ITEC305_Project
             {
                 using (var cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = $"UPDATE project.room SET title = '{roomName}' WHERE room_id = '{roomId}' AND user_id = '{userId}'";
-                    return cmd.ExecuteNonQuery();
+                    cmd.CommandText = $"UPDATE project.room SET title = '{roomName}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
+                    return cmd.ExecuteNonQuery() > 0;
                 }
             }
         }
@@ -126,8 +175,9 @@ namespace ITEC305_Project
             {
                 using (var cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = $"DELETE FROM project.room WHERE room_id = '{roomId}' AND user_id = '{userId}'";
-                    return cmd.ExecuteNonQuery();
+                    cmd.CommandText = $"DELETE FROM project.room WHERE room_id = '{roomId}' AND owner_id = '{userId}';";
+					cmd.CommandText += $"DELETE FROM project.room_member WHERE room_id = '{roomId}';";
+                    return cmd.ExecuteNonQuery() > 0;
                 }
             }
         }
@@ -139,19 +189,19 @@ namespace ITEC305_Project
                 using (var cmd = con.CreateCommand())
                 {
                     cmd.CommandText = $"UPDATE project.room SET user_id = '{newOwnerId}' WHERE room_id = '{roomId}' AND user_id = '{userId}'";
-                    return cmd.ExecuteNonQuery();
+                    return cmd.ExecuteNonQuery() > 0;
                 }
             }
         }
 
-        internal static bool DeleteInvite(string inviteId, string userId)
+        internal static bool DeleteInvite(string inviteId)
         {
             using (var con = GetConnection())
             {
                 using (var cmd = con.CreateCommand())
                 {
-                    cmd.CommandText = $"DELETE FROM project.invite WHERE invite_id = '{inviteId}' AND user_id = '{userId}'";
-                    return cmd.ExecuteNonQuery();
+                    cmd.CommandText = $"DELETE FROM project.invite WHERE invite_id = '{inviteId}'";
+                    return cmd.ExecuteNonQuery() > 0;
                 }
             }
         }

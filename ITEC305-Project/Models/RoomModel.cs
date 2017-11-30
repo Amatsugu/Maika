@@ -8,7 +8,7 @@ namespace ITEC305_Project.Models
     {
 		public string Id { get; set; }
 		public string Name { get; set; }
-		public string Owner { get; set; }
-		public UserModel[] Members { get; set; }
+		public UserModel Owner { get; set; }
+		public List<UserModel> Members { get; set; }
 	}
 }

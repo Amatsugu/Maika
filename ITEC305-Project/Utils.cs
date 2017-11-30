@@ -7,7 +7,7 @@ namespace ITEC305_Project
 {
     public static class Utils
     {
-		private static string HashPassword(string password)
+		public static string HashPassword(string password)
 		{
 			byte[] salt;
 			new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
