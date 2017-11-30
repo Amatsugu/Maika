@@ -10,9 +10,10 @@ using Npgsql;
 
 namespace ITEC305_Project
 {
-	class ITEC305Project //TODO: Implement Database transactions
+	public static class ITEC305Project //TODO: Implement Database transactions
 	{
 		public const string HOST = "itec305.luminousvector.com";
+		private static readonly DBCredentials dBCredentials = DBCredentials.FromJSON("DB_Credentials.json");
 
 		internal static StatelessAuthenticationConfiguration StatelessConfig { get; private set; } = new StatelessAuthenticationConfiguration(nancyContext =>
 		{
@@ -20,7 +21,8 @@ namespace ITEC305_Project
 			{
 				var ApiKey = nancyContext.Request.Cookies.First(c => c.Key == "Token").Value;
 				Console.WriteLine($"Login Token: {ApiKey}");
-				return Authenticator.GetUser(ApiKey);
+				var i = Authenticator.GetUserIdenity(ApiKey);
+				return i;
 			}
 			catch (Exception e)
 			{
@@ -31,22 +33,22 @@ namespace ITEC305_Project
 
 		private static NpgsqlConnection GetConnection()
 		{
-			var conn = new NpgsqlConnection(Credentials.ConntectionString);
+			var conn = new NpgsqlConnection(dBCredentials.ConntectionString);
 			conn.Open();
 			return conn;
 		}
 
-		internal static string ValidateUser(LoginCredentialsModel login) //TODO: Validate User
+		internal static string ValidateUser(UserCredentialsModel login) //TODO: Validate User
 		{
-			Authenticator.Authenticate(new UserIdenity(Authenticator.GenerateToken(), login.Username));
+			return Authenticator.Authenticate(new UserPrincipal(Authenticator.GenerateToken(), login.Username));
 		}
 
-		internal static void CreateUser(LoginCredentialsModel user)
+		internal static UserModel CreateUser(UserCredentialsModel user)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static dynamic GetUserInfo(string id)
+		internal static UserModel GetUserInfo(string id)
 		{
 			throw new NotImplementedException();
 		}
@@ -56,37 +58,37 @@ namespace ITEC305_Project
 			throw new NotImplementedException();
 		}
 
-		internal static object SetUsername(string userid, string username)
+		internal static bool SetUsername(string userid, UserCredentialsModel username)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object GetRoomInfo(string roomId)
+		internal static RoomModel GetRoomInfo(string roomId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object GetRoomMembers(string roomId)
+		internal static UserModel[] GetRoomMembers(string roomId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object SetRoomName(string roomId, string roomName)
+		internal static bool SetRoomName(string roomId, string roomName)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object CloseRoom(string roomId)
+		internal static bool CloseRoom(string roomId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object SetOwner(string roomId, string userId)
+		internal static bool SetOwner(string roomId, string userId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static object DeleteInvite(string inviteId)
+		internal static bool DeleteInvite(string inviteId)
 		{
 			throw new NotImplementedException();
 		}

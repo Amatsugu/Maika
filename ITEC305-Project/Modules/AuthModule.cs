@@ -5,6 +5,7 @@ using Nancy.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Nancy.Authentication.Stateless;
 
 namespace ITEC305_Project.Modules
 {
@@ -12,9 +13,12 @@ namespace ITEC305_Project.Modules
 	{
 		public AuthModule() : base("/auth")
 		{
+			StatelessAuthentication.Enable(this, ITEC305Project.StatelessConfig);
 			Post("/login", args =>
 			{
-				var login = this.Bind<LoginCredentialsModel>();
+				if (Context.CurrentUser != null)
+					return Response.AsRedirect("/");
+				var login = this.Bind<UserCredentialsModel>();
 				var token = ITEC305Project.ValidateUser(login);
 				Console.WriteLine(token);
 				if (string.IsNullOrEmpty(token))
@@ -27,7 +31,9 @@ namespace ITEC305_Project.Modules
 
 			Post("/register", _ =>
 			{
-				var user = this.Bind<LoginCredentialsModel>();
+				if (Context.CurrentUser != null)
+					return Response.AsRedirect("/");
+				var user = this.Bind<UserCredentialsModel>();
 				ITEC305Project.CreateUser(user);
 				var auth = ITEC305Project.ValidateUser(user);
 				return new Response().WithCookie("Token", auth, DateTime.Now.AddDays(5));

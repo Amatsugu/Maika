@@ -4,6 +4,8 @@ using System.Text;
 using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Security;
+using Nancy.ModelBinding;
+using ITEC305_Project.Models;
 
 namespace ITEC305_Project.Modules
 {
@@ -14,8 +16,15 @@ namespace ITEC305_Project.Modules
 			StatelessAuthentication.Enable(this, ITEC305Project.StatelessConfig);
 			this.RequiresAuthentication();
 			//User
-			Get("/user/{userId}", args => ITEC305Project.GetUserInfo(args.userId));
-			Post("/user/{userId}", args => ITEC305Project.SetUsername(args.userId, (string)args.username)); //TODO: Model Binding, User user context
+			Get("/user/{userId}", args => Response.AsJson(ITEC305Project.GetUserInfo((string)args.userId)));
+			Get("/user/", args => Response.AsJson(ITEC305Project.GetUserInfo((Context.CurrentUser as UserPrincipal).Id)));
+			Post("/user/", args =>
+			{
+				if (ITEC305Project.SetUsername((Context.CurrentUser as UserPrincipal).Id, this.Bind<UserCredentialsModel>()))
+					return new Response { StatusCode = HttpStatusCode.OK };
+				else
+					return new Response { StatusCode = HttpStatusCode.NotAcceptable };
+			});	
 
 			//Room
 			Get("/room/{roomId}", args => ITEC305Project.GetRoomInfo(args.roomId));

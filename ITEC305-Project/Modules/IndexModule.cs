@@ -12,14 +12,12 @@ namespace ITEC305_Project.Modules
     {
 		public IndexModule()
 		{
-			Console.WriteLine("INDEX");
 			StatelessAuthentication.Enable(this, ITEC305Project.StatelessConfig);
 			this.RequiresAuthentication();
 			Get("/", _ =>
 			{
-				Console.WriteLine("GET");
-				Console.WriteLine((Context?.CurrentUser as UserIdenity)?.UserName);
-				return "index";
+				Console.WriteLine(Context?.CurrentUser.Identity.Name);
+				return "";
 				//return View["index", new { user = Context.CurrentUser}];
 			});
 		}

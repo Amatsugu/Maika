@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 Credentials.cs
+ITEC305-Project/DB_Credentials.json

@@ -12,8 +12,8 @@ namespace ITEC305_Project.Bootstrap
 
 		private readonly HttpStatusCode[] _handledCodes = new HttpStatusCode[]
 		{
-			HttpStatusCode.NotFound,
-			HttpStatusCode.Unauthorized
+			//HttpStatusCode.NotFound,
+			//HttpStatusCode.Unauthorized
 		};
 
 		public void Handle(HttpStatusCode statusCode, NancyContext context)

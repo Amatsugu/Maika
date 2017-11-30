@@ -26,14 +26,14 @@ namespace ITEC305_Project.Auth
 
 		private Authenticator()
 		{
-			_activeSessions = new Dictionary<string, UserIdenity>();
+			_activeSessions = new Dictionary<string, UserPrincipal>();
 		}
 
-		private Dictionary<string, UserIdenity> _activeSessions;
+		private Dictionary<string, UserPrincipal> _activeSessions;
 
-		public static ClaimsPrincipal GetUser(string token) => (authenticator._activeSessions.ContainsKey(token)) ? authenticator._activeSessions[token] : null;
+		public static UserPrincipal GetUserIdenity(string token) => (authenticator._activeSessions.ContainsKey(token)) ? authenticator._activeSessions[token] : null;
 
-		public static string Authenticate(UserIdenity user)
+		public static string Authenticate(UserPrincipal user)
 		{
 			var token = GenerateToken();
 			authenticator._activeSessions.Add(token, user);

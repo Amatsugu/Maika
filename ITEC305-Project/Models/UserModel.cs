@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ITEC305_Project.Models
 {
-	public struct UserCredentialsModel
-	{
+    class UserModel
+    {
+		public string Id { get; set; }
 		public string Username { get; set; }
-		public string Password { get; set; }
 	}
 }
