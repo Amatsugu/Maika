@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Nancy;
 using Nancy.Security;
 using Nancy.Authentication.Stateless;
+using ITEC305_Project.Models;
 
 namespace ITEC305_Project.Modules
 {
@@ -17,7 +18,14 @@ namespace ITEC305_Project.Modules
 			{
 				var room = Maika.GetRoomInfo((string)args.roomId);
 				if (room != null)
-					return View["room", room];
+				{
+					if (room.IsPublic)
+					{
+						room.Join(Context.CurrentUser as UserPrincipal);
+						return View["room", room];
+					}else
+						return new Response { StatusCode = HttpStatusCode.Checkpoint }; //TODO: Invite Required message
+				}
 				else
 					return new Response { StatusCode = HttpStatusCode.NotFound };
 			});

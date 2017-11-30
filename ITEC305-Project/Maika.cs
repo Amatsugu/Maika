@@ -31,12 +31,22 @@ namespace ITEC305_Project
 			}
 		});
 
-	
 		private static NpgsqlConnection GetConnection()
 		{
 			var conn = new NpgsqlConnection(dBCredentials.ConntectionString);
 			conn.Open();
 			return conn;
+		}
+
+		private static T RunCommand<T>(Func<NpgsqlCommand, T> func)
+		{
+			using (var con = GetConnection())
+			{
+				using (var cmd = con.CreateCommand())
+				{
+					return func(cmd);
+				}
+			}
 		}
 
 		internal static string ValidateUser(UserCredentialsModel login)
@@ -82,7 +92,7 @@ namespace ITEC305_Project
 			{
 				using (var cmd = con.CreateCommand())
 				{
-					cmd.CommandText = $"SELECT username FROM project.user WHERE user_id = '{userId}'";\
+					cmd.CommandText = $"SELECT username FROM project.user WHERE user_id = '{userId}'";
 					using (var reader = cmd.ExecuteReader())
 					{
 						if (!reader.HasRows)
@@ -155,6 +165,20 @@ namespace ITEC305_Project
 				}
 			}
 		}
+
+		internal static bool JoinRoom(string roomID, string userId) => 
+			RunCommand(cmd =>
+			{
+				cmd.CommandText = $"INSERT INTO project.room_member (room_id, user_id) VALUES ({roomID}, {userId})";
+				return cmd.ExecuteNonQuery() > 0;
+			});
+
+		internal static bool LeaveRoom(string userId) =>
+			RunCommand(cmd =>
+			{
+				cmd.CommandText = $"DELETE FROM project.room_member WHERE user_id = '{userId}'";
+				return cmd.ExecuteNonQuery() > 0;
+			});
 
 		internal static List<UserModel> GetRoomMembers(string roomId)
 		{
