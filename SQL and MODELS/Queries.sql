@@ -7,7 +7,7 @@ SELECT (email) FROM project.user WHERE username = 'test' AND password = 'test';
 -- Retrieve user.user_id, room.room_id, room.title, room.password, room.type --
 SELECT u.user_id, r.room_id, r.title, r.password, r.type
 FROM project.user u
-LEFT JOIN project.room r ON u.user_id = r.user_id;
+LEFT JOIN project.room r ON u.user_id = r.owner_id;
 
 -- Retrieve all room and which user is in what room --
 SELECT r.room_id, u.user_id
@@ -39,7 +39,7 @@ UPDATE project.room SET password = '12345', type = 'false' WHERE room_id = 'e7d7
 INSERT INTO project.user (username, password, email) VALUES ('test1', 'test1', 'test@test.com');
 
 -- Insert Room --
-INSERT INTO project.room (user_id, title, password, type) VALUES ('c492f646-d54d-11e7-9296-cec278b6b50a', 'test title', '123', 'false');
+INSERT INTO project.room (owner_id, title, password, type) VALUES ('c492f646-d54d-11e7-9296-cec278b6b50a', 'test title', '123', 'false');
 
 -- Insert Room_Member --
 INSERT INTO project.room_member (room_id, user_id) VALUES ('e7d74670-d54d-11e7-9296-cec278b6b50a', 'c492f646-d54d-11e7-9296-cec278b6b50a');
@@ -49,7 +49,7 @@ INSERT INTO project.room_member (room_id, user_id) VALUES ('e7d74670-d54d-11e7-9
 
 -----
 --- Update room owner --
-UPDATE project.room SET user_id = 'c492f646-d54d-11e7-9296-cec278b6b50a' WHERE room_id = 'e7d74670-d54d-11e7-9296-cec278b6b50a';
+UPDATE project.room SET owner_id = 'c492f646-d54d-11e7-9296-cec278b6b50a' WHERE room_id = 'e7d74670-d54d-11e7-9296-cec278b6b50a';
 
 --- Number of members of a room --
 SELECT COUNT(room_id) AS Num_of_Members FROM project.room_member r WHERE room_id = 'e7d74670-d54d-11e7-9296-cec278b6b50a';
@@ -57,7 +57,7 @@ SELECT COUNT(room_id) AS Num_of_Members FROM project.room_member r WHERE room_id
 --- List of users in what room and output their username and email --
 SELECT DISTINCT u.username, u.email
 FROM project.room_member r
-LEFT JOIN project.user u ON u.user_id = r.user_id
+LEFT JOIN project.user u ON u.user_id = r.owner_id
 WHERE r.room_id = '1';
 
 --- Display username by email --
