@@ -13,7 +13,7 @@ namespace ITEC305_Project.Models
 		public string DB_Pass { get; set; }
 
 		[JsonIgnore]
-		public string ConntectionString => $"Host={ITEC305Project.HOST};Username={DB_User};Password={DB_Pass};Database={DB_Name}";
+		public string ConntectionString => $"Host={Maika.HOST};Username={DB_User};Password={DB_Pass};Database={DB_Name}";
 
 		public static DBCredentials FromJSON(string file) => JsonConvert.DeserializeObject<DBCredentials>(File.ReadAllText(file));
 		public void Save(string file) => File.WriteAllText(file, JsonConvert.SerializeObject(this));

@@ -12,7 +12,7 @@ namespace ITEC305_Project.Bootstrap
 {
 	public class NancyBootstrap : DefaultNancyBootstrapper
 	{
-		private string PROJECT => nameof(ITEC305Project);
+		private string PROJECT => nameof(Maika);
 		/*private byte[] favicon;
 
 		protected override byte[] FavIcon

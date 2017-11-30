@@ -12,7 +12,7 @@ namespace ITEC305_Project.Modules
     {
 		public IndexModule()
 		{
-			StatelessAuthentication.Enable(this, ITEC305Project.StatelessConfig);
+			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
 			this.RequiresAuthentication();
 			Get("/", _ =>
 			{

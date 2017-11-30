@@ -10,9 +10,9 @@ using Npgsql;
 
 namespace ITEC305_Project
 {
-	public static class ITEC305Project //TODO: Implement Database transactions
+	public static class Maika //TODO: Implement Database transactions
 	{
-		public const string HOST = "itec305.luminousvector.com";
+		public const string HOST = "maika.luminousvector.com";
 		private static readonly DBCredentials dBCredentials = DBCredentials.FromJSON("DB_Credentials.json");
 
 		internal static StatelessAuthenticationConfiguration StatelessConfig { get; private set; } = new StatelessAuthenticationConfiguration(nancyContext =>
