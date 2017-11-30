@@ -4,7 +4,6 @@ CREATE TABLE "project"."user"
      "username" VARCHAR(30) NOT NULL,
      "password" VARCHAR(30) NOT NULL,
      "email"    VARCHAR(30) NOT NULL,
-     "created"  TIMESTAMP(0) NOT NULL,
      PRIMARY KEY ("user_id")
   ) without oids;
   
@@ -50,8 +49,8 @@ ALTER TABLE "project"."invite"
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO "project"."user" VALUES ('c492f646-d54d-11e7-9296-cec278b6b50a', 'test', 'test', 'test@test.com', '2017-11-10 00:57:09');
-INSERT INTO "project"."user" VALUES ('c492fa74-d54d-11e7-9296-cec278b6b50a', 'test123', 'test123', 'test@test.com', '2017-11-10 00:57:09');
+INSERT INTO "project"."user" VALUES ('c492f646-d54d-11e7-9296-cec278b6b50a', 'test', 'test', 'test@test.com');
+INSERT INTO "project"."user" VALUES ('c492fa74-d54d-11e7-9296-cec278b6b50a', 'test123', 'test123', 'test@test.com');
 
 -- ----------------------------
 -- Records of room

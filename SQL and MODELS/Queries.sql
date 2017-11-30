@@ -36,7 +36,7 @@ UPDATE project.room SET password = '12345', type = 'false' WHERE room_id = 'e7d7
 
 
 -- Insert User --
-INSERT INTO project.user (username, password, email, created) VALUES ('test1', 'test1', 'test@test.com', current_timestamp);
+INSERT INTO project.user (username, password, email) VALUES ('test1', 'test1', 'test@test.com');
 
 -- Insert Room --
 INSERT INTO project.room (user_id, title, password, type) VALUES ('c492f646-d54d-11e7-9296-cec278b6b50a', 'test title', '123', 'false');
