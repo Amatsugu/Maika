@@ -27,10 +27,16 @@ namespace ITEC305_Project.Modules
 			});	
 
 			//Room
-			Get("/room/{roomId}", args => ITEC305Project.GetRoomInfo(args.roomId));
-			Get("/room/{roomId}/members", args => ITEC305Project.GetRoomMembers(args.roomId));
-			Post("/room/{roomId}", args => ITEC305Project.SetRoomName(args.roomId, (string)args.roomName)); //TODO: Model Binding
-			Delete("/room/{roomId}", args => ITEC305Project.CloseRoom(args.roomId));
+			Get("/room/{roomId}", args => Response.AsJson(ITEC305Project.GetRoomInfo((string)args.roomId)));
+			Get("/room/{roomId}/members", args => Response.AsJson(ITEC305Project.GetRoomMembers((string)args.roomId)));
+			Post("/room/{roomId}", args =>
+			{
+				if(ITEC305Project.SetRoomName((string)args.roomId, this.Bind<RoomModel>().Name))
+					return new Response { StatusCode = HttpStatusCode.OK };
+				else
+					return new Response { StatusCode = HttpStatusCode.NotAcceptable };
+			});
+			Delete("/room/{roomId}", args => ITEC305Project.CloseRoom((string)args.roomId));
 			Post("/room/{roomId}", args => ITEC305Project.SetOwner(args.roomId, args.userId)); //TODO: Model Binding
 			Get("/room/{roomId}/canvas", args => null); //TODO: Canvas Transactions
 			Post("/room/{roomId}/canvas", args => null); //TODO: Canvas Transactions

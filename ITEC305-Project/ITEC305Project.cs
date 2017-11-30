@@ -73,22 +73,22 @@ namespace ITEC305_Project
 			throw new NotImplementedException();
 		}
 
-		internal static bool SetRoomName(string roomId, string roomName)
+		internal static bool SetRoomName(string roomId, string userId, string roomName)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static bool CloseRoom(string roomId)
+		internal static bool CloseRoom(string roomId, string userId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static bool SetOwner(string roomId, string userId)
+		internal static bool SetOwner(string roomId, string userId, string newOwnerId)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal static bool DeleteInvite(string inviteId)
+		internal static bool DeleteInvite(string inviteId, string userId)
 		{
 			throw new NotImplementedException();
 		}
