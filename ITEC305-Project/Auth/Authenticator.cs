@@ -8,17 +8,14 @@ namespace ITEC305_Project.Auth
 {
     public class Authenticator
     {
-		private static readonly object semphore = new object();
+		private static readonly object semaphore = new object();
 		private static Authenticator Auth
 		{
 			get
 			{
-				lock(semphore)
+				lock(semaphore)
 				{
-					if (_instance == null)
-						return _instance = new Authenticator();
-					else
-						return _instance;
+					return _instance ?? (_instance = new Authenticator());
 				}
 			}
 		}
