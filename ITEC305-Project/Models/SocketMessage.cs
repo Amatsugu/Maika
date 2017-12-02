@@ -11,6 +11,7 @@ namespace ITEC305_Project.Models
 		CanvasDraw,
 		Join,
 		Leave,
+		RoomClose
 	}
 
     public class SocketMessage

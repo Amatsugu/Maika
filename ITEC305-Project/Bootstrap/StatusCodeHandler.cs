@@ -4,6 +4,9 @@ using System.Text;
 using Nancy;
 using System.Linq;
 using ITEC305_Project.Models;
+using Nancy.Configuration;
+using Nancy.Responses.Negotiation;
+using Nancy.Responses;
 
 namespace ITEC305_Project.Bootstrap
 {
@@ -13,7 +16,8 @@ namespace ITEC305_Project.Bootstrap
 		private readonly HttpStatusCode[] _handledCodes = new HttpStatusCode[]
 		{
 			//HttpStatusCode.NotFound,
-			//HttpStatusCode.Unauthorized
+			//HttpStatusCode.Unauthorized,
+			//HttpStatusCode.Checkpoint
 		};
 
 		public void Handle(HttpStatusCode statusCode, NancyContext context)
@@ -22,7 +26,7 @@ namespace ITEC305_Project.Bootstrap
 			{
 				context.Response = new Response //TODO: ERROR Codes
 				{
-
+					
 				};
 			}
 			else

@@ -9,8 +9,8 @@ using SuperWebSocket;
 
 namespace ITEC305_Project
 {
-    public class MaikaSocket
-    {
+	public class MaikaSocket
+	{
 		private static readonly object semaphore = new object();
 		private static MaikaSocket Socket
 		{
@@ -39,7 +39,7 @@ namespace ITEC305_Project
 		public static void OnMessageRecieved(WebSocketSession session, string message)
 		{
 			var m = SocketMessage.FromJSON(message);
-			switch(m.Type)
+			switch (m.Type)
 			{
 				case MessageType.Join:
 					m.User.Session = session;
@@ -67,5 +67,14 @@ namespace ITEC305_Project
 				Message = user.UserId //TODO: Finalize Message Contents
 			}.ToString()));
 		}
-    }
+
+		public static void SendCloseMessage(string roomId) => Socket.Users.ForEach(u =>
+		{
+			if (u.RoomId == roomId)
+				u.Session.Send(new SocketMessage
+				{
+					Type = MessageType.RoomClose
+				}.ToString());
+		});
+	}
 }

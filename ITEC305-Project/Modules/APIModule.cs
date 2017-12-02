@@ -17,7 +17,6 @@ namespace ITEC305_Project.Modules
 			this.RequiresAuthentication();
 			//User
 			Get("/user/{userId}", args => Response.AsJson(Maika.GetUser((string)args.userId)));
-			Get("/user/", args => Response.AsJson(Maika.GetUser((Context.CurrentUser as UserPrincipal).Id)));
 			Post("/user/", args =>
 			{
 				if (Maika.SetUsername((Context.CurrentUser as UserPrincipal).Id, this.Bind<UserCredentialsModel>()))
@@ -25,12 +24,13 @@ namespace ITEC305_Project.Modules
 				else
 					return new Response { StatusCode = HttpStatusCode.NotAcceptable };
 			});
+			Get("/user/", args => Response.AsJson(Maika.GetUser((Context.CurrentUser as UserPrincipal).Id)));
 
 			//Room
 			Get("/room", args => Response.AsJson(Maika.CreateRoom((Context.CurrentUser as UserPrincipal).Id)));
 			Get("/room/{roomId}", args => Response.AsJson(Maika.GetRoomInfo((string)args.roomId)));
 			Get("/room/{roomId}/members", args => Response.AsJson(Maika.GetRoomMembers((string)args.roomId)));
-			Post("/room/{roomId}", args =>
+			Post("/room/{roomId}/name", args =>
 			{
 				if(Maika.SetRoomName((string)args.roomId, (Context.CurrentUser as UserPrincipal).Id, this.Bind<RoomModel>().Name))
 					return new Response { StatusCode = HttpStatusCode.OK };
@@ -57,7 +57,7 @@ namespace ITEC305_Project.Modules
 			Post("/room/{roomId}/chat", args => null); //TODO: Chat Transactions
 
 			//Invites
-			Get("/invite", args => Response.AsJson(Maika.CreateInvite()));
+			Post("/invite", args => Response.AsJson(Maika.CreateInvite(this.Bind<RoomModel>("Name", "Owner", "Members", "IsPublic").Id)));
 			Get("/invite/{inviteId}", args => null); //TODO: Is this useful?
 			Delete("/invite/{inviteId}", args =>
 			{

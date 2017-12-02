@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ITEC305_Project.Models
 {
-    class UserModel
+    public class InviteModel
     {
-        public string Id { get; set; }
-        public string Username { get; set; }
+		public string Id { get; set; }
+		public string RoomId { get; set; }
 	}
 }

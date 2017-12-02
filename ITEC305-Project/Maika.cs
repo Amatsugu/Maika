@@ -43,154 +43,173 @@ namespace ITEC305_Project
 			}
 		}
 
-		internal static string ValidateUser(UserCredentialsModel login) =>
-			RunCommand( cmd =>
+		internal static string ValidateUser(UserCredentialsModel login) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"SELECT password, user_id, username FROM users WHERE email = '{Uri.EscapeDataString(login.Email)}'";
+			using (var reader = cmd.ExecuteReader())
 			{
-				cmd.CommandText = $"SELECT password, user_id FROM users WHERE email = '{Uri.EscapeDataString(login.Email)}'";
-				using (var reader = cmd.ExecuteReader())
-				{
-					reader.Read();
-					if (Utils.VerifyPassword(login.Password, reader.GetString(0)))
-						return Authenticator.Authenticate(new UserPrincipal(reader.GetString(1), login.Username));
-					else
-						return null;
-				}
-			});
+				reader.Read();
+				if (Utils.VerifyPassword(login.Password, reader.GetString(0)))
+					return Authenticator.Authenticate(new UserPrincipal(reader.GetString(1), reader.GetString(2)));
+				else
+					return null;
+			}
+		});
 
-		internal static UserModel CreateUser(UserCredentialsModel user) =>
-			RunCommand(cmd =>
+		internal static UserModel CreateUser(UserCredentialsModel user) => RunCommand(cmd =>
+		{
+			if (CheckEmailExists(user.Email))
+				return null;
+			var id = Authenticator.GenerateToken();
+			cmd.CommandText = $"INSERT INTO users (user_id, username, password, email) VALUES ('{id}', '{Uri.EscapeDataString(user.Username)}', '{Utils.HashPassword(user.Password)}', '{Uri.EscapeDataString(user.Email)}');";
+			cmd.ExecuteNonQuery();
+			return new UserModel
 			{
-				var id = Authenticator.GenerateToken();
-				cmd.CommandText = $"INSERT INTO users (user_id, username, password, email) VALUES ('{id}', '{Uri.EscapeDataString(user.Username)}', '{Utils.HashPassword(user.Password)}', '{Uri.EscapeDataString(user.Email)}');";
-				cmd.ExecuteNonQuery();
+				Username = user.Username,
+				Id = id
+			};
+		});
+
+		internal static UserModel GetUser(string userId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"SELECT username FROM users WHERE user_id = '{userId}'";
+			using (var reader = cmd.ExecuteReader())
+			{
+				if (!reader.HasRows)
+					return null;
+				reader.Read();
 				return new UserModel
 				{
-					Username = user.Username,
-					Id = id
+					Id = userId,
+					Username = Uri.UnescapeDataString(reader.GetString(0))
 				};
-			});
+			}
+		});
 
-		internal static UserModel GetUser(string userId) =>
-			RunCommand(cmd =>
-			{
-				cmd.CommandText = $"SELECT username FROM users WHERE user_id = '{userId}'";
-				using (var reader = cmd.ExecuteReader())
-				{
-					if (!reader.HasRows)
-						return null;
-					reader.Read();
-					return new UserModel
-					{
-						Id = userId,
-						Username = Uri.UnescapeDataString(reader.GetString(0))
-					};
-				}
-			});
-
-		internal static bool CheckEmailExists(string email) =>
-			RunCommand(cmd =>
-			{
-				cmd.CommandText = $"COUNT (SELECT username FROM users WHERE email = '{email}')";
-				return ((int)cmd.ExecuteScalar()) > 0;
-			});
-
-		internal static string CreateInvite() //TODO: Create Invite
+		internal static bool CheckEmailExists(string email) => RunCommand(cmd =>
 		{
-			throw new NotImplementedException();
-		}
+			cmd.CommandText = $"SELECT COUNT(email) FROM users WHERE email = '{Uri.EscapeDataString(email)}'";
+			return ((long)cmd.ExecuteScalar()) > 0;
+		});
 
-		internal static bool SetUsername(string userid, UserCredentialsModel user) =>
-			RunCommand(cmd =>
-			{
-				cmd.CommandText = $"UPDATE users SET username = '{Uri.EscapeDataString(user.Username)}' WHERE user_id = '{userid}'";
-				return cmd.ExecuteNonQuery() > 0;
-			});
-
-		internal static RoomModel CreateRoom(string ownerId) //TODO: Create Room
+		internal static bool SetUsername(string userid, UserCredentialsModel user) => RunCommand(cmd =>
 		{
-			throw new NotImplementedException();
-		}
+			cmd.CommandText = $"UPDATE users SET username = '{Uri.EscapeDataString(user.Username)}' WHERE user_id = '{userid}'";
+			return cmd.ExecuteNonQuery() > 0;
+		});
 
-		internal static RoomModel GetRoomInfo(string roomId) =>
-			RunCommand(cmd =>
+		internal static RoomModel CreateRoom(string ownerId) => RunCommand(cmd =>
+		{
+			var id = Authenticator.GenerateToken();
+			cmd.CommandText = $"INSERT INTO room (room_id, owner_id, title) VALUES('{id}', '{ownerId}', 'New Room');";
+			cmd.CommandText += $"DELETE FROM room_member WHERE user_id = '{ownerId}';";
+			cmd.CommandText += $"INSERT INTO room_member VALUES('{id}',  '{ownerId}');";
+			cmd.ExecuteNonQuery();
+			var owner = GetUser(ownerId);
+			return new RoomModel
 			{
-				cmd.CommandText = $"SELECT title, owner_id FROM room WHERE room_id = '{roomId}'";
-				using (var reader = cmd.ExecuteReader())
+				Id = id,
+				Owner = owner,
+				IsPublic = false,
+				Members = new List<UserModel>() { owner },
+				Name = "New Room"
+			};
+		});
+
+		internal static RoomModel GetRoomInfo(string roomId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"SELECT title, owner_id FROM room WHERE room_id = '{roomId}'";
+			using (var reader = cmd.ExecuteReader())
+			{
+				if (!reader.HasRows)
+					return null;
+				reader.Read();
+				return new RoomModel
 				{
-					if (!reader.HasRows)
-						return null;
-					reader.Read();
-					return new RoomModel
-					{
-						Id = roomId,
-						Name = Uri.UnescapeDataString(reader.GetString(0)),
-						Owner = GetUser(reader.GetString(1)),
-						Members = GetRoomMembers(roomId)
-					};
-				}
-			});
+					Id = roomId,
+					Name = Uri.UnescapeDataString(reader.GetString(0)),
+					Owner = GetUser(reader.GetString(1)),
+					Members = GetRoomMembers(roomId)
+				};
+			}
+		});
 
-		internal static bool JoinRoom(string roomID, string userId) => 
-			RunCommand(cmd =>
-			{
-				cmd.CommandText = $"INSERT INTO room_member (room_id, user_id) VALUES ({roomID}, {userId})";
-				return cmd.ExecuteNonQuery() > 0;
-			});
+		internal static bool JoinRoom(string roomID, string userId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"INSERT INTO room_member (room_id, user_id) VALUES ({roomID}, {userId})";
+			return cmd.ExecuteNonQuery() > 0;
+		});
 
-		internal static bool LeaveRoom(string userId) =>
-			RunCommand(cmd =>
-			{
-				cmd.CommandText = $"DELETE FROM room_member WHERE user_id = '{userId}'";
-				return cmd.ExecuteNonQuery() > 0;
-			});
+		internal static bool LeaveRoom(string userId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"DELETE FROM room_member WHERE user_id = '{userId}'";
+			return cmd.ExecuteNonQuery() > 0;
+		});
 
-		internal static List<UserModel> GetRoomMembers(string roomId) =>
-			RunCommand(cmd =>
+		internal static List<UserModel> GetRoomMembers(string roomId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"SELECT users.user_id, users.username FROM users, room_member WHERE users.user_id = room_member.user_id AND room_member.room_id = '{roomId}'";
+			using (var reader = cmd.ExecuteReader())
 			{
-				cmd.CommandText = $"SELECT u.user_id, u.username FROM user u LEFT JOIN room_member rm ON u.user_id = rm.user_id WHERE room_id = '{roomId }'";
-				using (var reader = cmd.ExecuteReader())
+				if (!reader.HasRows)
+					return null;
+				List<UserModel> users = new List<UserModel>();
+				while (reader.Read())
 				{
-					if (!reader.HasRows)
-						return null;
-					List<UserModel> users = new List<UserModel>();
-					while (reader.Read())
+					users.Add(new UserModel
 					{
-						users.Add(new UserModel
-						{
-							Id = reader.GetString(0),
-							Username = Uri.UnescapeDataString(reader.GetString(1))
-						});
-					}
-					return users;
+						Id = reader.GetString(0),
+						Username = Uri.UnescapeDataString(reader.GetString(1))
+					});
 				}
-			});
+				return users;
+			}
+		});
 
-		internal static bool SetRoomName(string roomId, string userId, string roomName) =>
-			RunCommand(cmd =>
-			{
-				cmd.CommandText = $"UPDATE room SET title = '{Uri.EscapeDataString(roomName)}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
-				return cmd.ExecuteNonQuery() > 0;
-			});
+		internal static void CleanRoom(string roomId) => RunCommand(cmd => //TODO: Cleanup Room
+		{
+			var room = GetRoomInfo(roomId);
+			if (room.Members.Count == 0)
+				cmd.CommandText = $"DELETE FROM room WHERE room_id = '{roomId}'";
+			else
+				cmd.CommandText = $"UPDATE room SET owner_id = '{room.Members.First().Id}'";
+			return cmd.ExecuteNonQuery();
+		});
 
-		internal static bool CloseRoom(string roomId, string userId) =>
-			RunCommand(cmd =>
-			{
-				cmd.CommandText = $"DELETE FROM room WHERE room_id = '{roomId}' AND owner_id = '{userId}';";
-				return cmd.ExecuteNonQuery() > 0;
-			});
+		internal static bool SetRoomName(string roomId, string userId, string roomName) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"UPDATE room SET title = '{Uri.EscapeDataString(roomName)}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
+			return cmd.ExecuteNonQuery() > 0;
+		});
 
-		internal static bool SetOwner(string roomId, string userId, string newOwnerId) =>
-			RunCommand(cmd =>
-			{
-				cmd.CommandText = $"UPDATE room SET user_id = '{newOwnerId}' WHERE room_id = '{roomId}' AND user_id = '{userId}'";
-				return cmd.ExecuteNonQuery() > 0;
-			});
+		internal static bool CloseRoom(string roomId, string userId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"DELETE FROM room WHERE room_id = '{roomId}' AND owner_id = '{userId}';";
+			return cmd.ExecuteNonQuery() > 0;
+		});
 
-		internal static bool DeleteInvite(string inviteId) =>
-			RunCommand(cmd =>
+		internal static bool SetOwner(string roomId, string userId, string newOwnerId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"UPDATE room SET owner_id = '{newOwnerId}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
+			return cmd.ExecuteNonQuery() > 0;
+		});
+
+		internal static InviteModel CreateInvite(string roomId) => RunCommand(cmd =>
+		{
+			var invite = Authenticator.GenerateToken();
+			cmd.CommandText = $"INSERT INTO invite VALUES ('{invite}', '{roomId}')";
+			cmd.ExecuteNonQuery();
+			return new InviteModel
 			{
-				cmd.CommandText = $"DELETE FROM invite WHERE invite_id = '{inviteId}'";
-				return cmd.ExecuteNonQuery() > 0;
-			});
+				Id = invite,
+				RoomId = roomId
+			};
+		});
+
+		internal static bool DeleteInvite(string inviteId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"DELETE FROM invite WHERE invite_id = '{inviteId}'";
+			return cmd.ExecuteNonQuery() > 0;
+		});
 	}
 }

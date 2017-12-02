@@ -34,7 +34,9 @@ namespace ITEC305_Project.Modules
 				if (Context.CurrentUser != null)
 					return Response.AsRedirect("/");
 				var user = this.Bind<UserCredentialsModel>();
-				Maika.CreateUser(user);
+				var newUser = Maika.CreateUser(user);
+				if (newUser == null)
+					return new Response().WithStatusCode(HttpStatusCode.NotAcceptable);
 				var auth = Maika.ValidateUser(user);
 				return new Response().WithCookie("Token", auth, DateTime.Now.AddDays(5));
 			});

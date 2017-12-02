@@ -24,7 +24,7 @@ namespace ITEC305_Project.Modules
 						room.Join(Context.CurrentUser as UserPrincipal);
 						return View["room", room];
 					}else
-						return new Response { StatusCode = HttpStatusCode.Checkpoint }; //TODO: Invite Required message
+						return new Response { StatusCode = HttpStatusCode.Checkpoint }; 
 				}
 				else
 					return new Response { StatusCode = HttpStatusCode.NotFound };
