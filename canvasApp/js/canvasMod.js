@@ -3,31 +3,51 @@
 //CSCI 305 Internet Programming
 //Khamraj Rojit, Christina Wei, Yu Lin, Eddy Lin
 
-var $canvas = $("canvas");
-var context = $canvas[0].getContext("2d");
-var lastEvent;
-var mouseDown = false;
+var flag = false, dFlag = false;
+var x1, x2, y1, y2;
+var canvas;
 
+$(document).ready(function() //TODO: Capture states for network transmition
+{
+	canvas = $("canvas");
+	var context = $canvas[0].getContext("2d");
+	var xScale = 1920/canvas.offsetWidth, yScale = 1080/canvas.offsetHeigh; //TODO: Caclucate scale factor	
+	//On mouse events on the canvas
+	$canvas.mousedown(function(e){
+		x1 = x2;
+		y1 = y2;
+		x2 = e.clientX - canvas.offsetLeft;
+		y2 = e.clientY - canvas.offsetTop;
 
-//On mouse events on the canvas
-$canvas.mousedown(function(e){
-  lastEvent = e;
-  mouseDown = true;
-}).mousemove(function(e){
-  //Draw lines
-  if(mouseDown) {
-    context.beginPath();
-    context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
-    context.lineTo(e.offsetX, e.offsetY);
-    context.lineJoin = context.lineCap = 'round';
-    context.strokeStyle = color;
-    context.stroke();
-    lastEvent = e;
-  }
-}).mouseup(function(){
-  mouseDown = false;
-}).mouseleave(function(){
-  $canvas.mouseup();
+		flag = true;
+		dFlag = true;
+		if (dFlag) 
+		{
+			context.beginPath();
+			context.fillStyle = color;
+			context.fillRect((x2 + window.scrollX) * xScale, (y2 + window.scrollY) * yScale, 2, 2);
+			context.closePath();
+			dFlag = false;
+		}
+	}).mousemove(function(e){
+		
+		if (flag) 
+		{
+			x1 = x2;
+			y1 = y2;
+			x2 = e.clientX - canvas.offsetLeft;
+			y2 = e.clientY - canvas.offsetTop;
+			context.beginPath();
+			context.moveTo((x1 + window.scrollX) * xScale, (y1 + window.scrollY) * yScale);
+			context.lineTo((x2 + window.scrollX) * xScale, (y2 + window.scrollY) * yScale);
+			context.lineJoin = context.lineCap = 'round';
+			context.strokeStyle = color;
+			context.stroke();
+			context.closePath();
+		}
+	}).mouseup(function(){
+		flag = false;
+	}).mouseleave(function(){
+		$canvas.mouseup();
+	});
 });
-
-
