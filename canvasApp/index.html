@@ -1,0 +1,55 @@
+<!--CHANGE CODE FOR BUTTONS-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Canvas Demo</title>
+			<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	</head>
+	<body>
+		<h1 align="center">jQuery Simple Draw App Demo</h1>
+		<div class = "chatbox"></div>
+		<canvas	width="900" height="540"></canvas>
+		<div class="control">
+			<ul class = "colorList">
+				<li class = "red"> </li>
+				<li class = "blue"> </li>
+				<li class = "yellow"> </li>
+				<li class = "white"> </li>
+				<li class = "orange"> </li>
+				<li class = "green"> </li>
+				<li class = "black"> </li>
+				<li class = "purple"> </li>
+			</ul>
+			<button id="revealColorSelect">New Color</button>
+			<div id="colorSelect"> <span id="newColor"></span>
+				<div class="sliders">
+					<p>
+						<label for="red">Red</label>
+						<input id="red" name="red" type="range" min=0 max=255 value=0>						
+					</p>
+					<p>
+						<label for="green">Green</label>
+						<input id="green" name="green" type="range" min=0 max=255 value=0>
+					</p>
+					<p>
+						<label for="blue">Blue</label>
+						<input id="blue" name="blue" type="range" min=0 max=255 value=0>
+					</p>
+				</div>
+			<div>
+				<button id="addNewColor">Add Color</button>
+			</div>
+			</div>
+			<div id = "brushControl">
+			</div>
+			<div id = "toolControl">
+			</div>
+		</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="js/canvasMod.js" charset="utf-8"></script>
+<script src="js/colorMod.js" charset="utf-8"></script>
+<script src="js/brushSizeMod.js" charset="utf-8"></script>
+<script src="js/toolMod.js" charset="utf-8"></script>
+</body>
+</html>
