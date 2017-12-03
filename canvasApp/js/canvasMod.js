@@ -8,20 +8,24 @@ var x1, x2, y1, y2;
 var canvas;
 var thickness = 5;
 
-var caputeredEvents = [];
-var nextCapture;
-var interval = 1000*(20/60)
+var capturedEvents;
+var interval = (20/60)
 
 $(document).ready(function() //TODO: Capture states for network transmition
 {
 	nextCapture = new Date().getTime() + interval;
-	setTimeout(function()
+	capturedEvents = [];
+	var send = function()
 	{
 		//TODO Send data
-		
-		nextCapture = new Date().getTime() + interval;
-		captureEvents = [];
-	}, interval);
+		if(capturedEvents.length > 0)
+		{
+			console.log(capturedEvents);
+			capturedEvents = [];
+		}
+		setTimeout(send, interval);
+	};
+	send();
 	canvas = $("canvas");
 	var context = canvas[0].getContext("2d");
 	var xScale = canvas.attr("width")/canvas.outerWidth(), yScale = canvas.attr("height")/canvas.outerHeight(); //TODO: Caclucate scale factor	
@@ -40,20 +44,19 @@ $(document).ready(function() //TODO: Capture states for network transmition
 			context.fillStyle = color;
 			context.arc((x2 + window.scrollX) * xScale, (y2 + window.scrollY) * yScale, thickness/2, 0, 2 * Math.PI);
 			context.fill();
-			//context.fillRect((x2 + window.scrollX) * xScale, (y2 + window.scrollY) * yScale, thickness, thickness);
 			context.closePath();
 			dFlag = false;
-			captureEvents[captureEvents.length] = 
+			capturedEvents.push( 
 			{
 				tpye:"dot",
 				p:
 				{
-					x:x2,
-					y:y2
+					x:(x2 + window.scrollX) * xScale,
+					y:(y2 + window.scrollY) * yScale
 				},
 				color:color,
 				size:thickness
-			};
+			});
 		}
 	}).mousemove(function(e){
 		if (flag) 
@@ -70,7 +73,7 @@ $(document).ready(function() //TODO: Capture states for network transmition
 			context.strokeStyle = color;
 			context.stroke();
 			context.closePath();
-			captureEvents[captureEvents.length] = 
+			capturedEvents.push( 
 			{
 				tpye:"line",
 				p1:
@@ -85,7 +88,7 @@ $(document).ready(function() //TODO: Capture states for network transmition
 				},
 				color:color,
 				size:thickness
-			};
+			});
 		}
 	}).mouseup(function(){
 		flag = false;
