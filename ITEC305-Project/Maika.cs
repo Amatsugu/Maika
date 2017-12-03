@@ -31,6 +31,7 @@ namespace ITEC305_Project
 			}
 		});
 
+
 		private static T RunCommand<T>(Func<NpgsqlCommand, T> func)
 		{
 			using (var con = new NpgsqlConnection(dBCredentials.ConntectionString))
@@ -98,20 +99,28 @@ namespace ITEC305_Project
 			return cmd.ExecuteNonQuery() > 0;
 		});
 
-		internal static RoomModel CreateRoom(string ownerId) => RunCommand(cmd =>
+		internal static string GetRoomMembership(string userId) => RunCommand(cmd =>
 		{
+			cmd.CommandText = $"SELECT room_id FROM room_member WHERE user_id = '{userId}'";
+			return cmd.ExecuteScalar() as string;
+		});
+
+		internal static RoomModel CreateRoom(UserPrincipal owner) => RunCommand(cmd =>
+		{
+			if (owner.RoomId != null)
+				LeaveRoom(owner);
 			var id = Authenticator.GenerateToken();
-			cmd.CommandText = $"INSERT INTO room (room_id, owner_id, title) VALUES('{id}', '{ownerId}', 'New Room');";
-			cmd.CommandText += $"DELETE FROM room_member WHERE user_id = '{ownerId}';";
-			cmd.CommandText += $"INSERT INTO room_member VALUES('{id}',  '{ownerId}');";
+			cmd.CommandText = $"INSERT INTO room (room_id, owner_id, title) VALUES('{id}', '{owner.Id}', 'New Room');";
+			cmd.CommandText += $"DELETE FROM room_member WHERE user_id = '{owner.Id}';";
+			cmd.CommandText += $"INSERT INTO room_member VALUES('{id}',  '{owner.Id}');";
 			cmd.ExecuteNonQuery();
-			var owner = GetUser(ownerId);
+			var u = GetUser(owner.Id);
 			return new RoomModel
 			{
 				Id = id,
-				Owner = owner,
+				Owner = u,
 				IsPublic = false,
-				Members = new List<UserModel>() { owner },
+				Members = new List<UserModel>() { u },
 				Name = "New Room"
 			};
 		});
@@ -134,15 +143,18 @@ namespace ITEC305_Project
 			}
 		});
 
-		internal static bool JoinRoom(string roomID, string userId) => RunCommand(cmd =>
+		internal static bool JoinRoom(UserPrincipal user, string roomID) => RunCommand(cmd =>
 		{
-			cmd.CommandText = $"INSERT INTO room_member (room_id, user_id) VALUES ({roomID}, {userId})";
+			if (user.RoomId != null)
+				LeaveRoom(user);
+			cmd.CommandText = $"INSERT INTO room_member (room_id, user_id) VALUES ({roomID}, {user.Id})";
 			return cmd.ExecuteNonQuery() > 0;
 		});
 
-		internal static bool LeaveRoom(string userId) => RunCommand(cmd =>
+		internal static bool LeaveRoom(UserPrincipal user) => RunCommand(cmd =>
 		{
-			cmd.CommandText = $"DELETE FROM room_member WHERE user_id = '{userId}'";
+			cmd.CommandText = $"DELETE FROM room_member WHERE user_id = '{user.Id}'";
+			CleanRoom(user.RoomId);
 			return cmd.ExecuteNonQuery() > 0;
 		});
 
@@ -166,9 +178,11 @@ namespace ITEC305_Project
 			}
 		});
 
-		internal static void CleanRoom(string roomId) => RunCommand(cmd => //TODO: Cleanup Room
+		internal static void CleanRoom(string roomId) => RunCommand(cmd =>
 		{
 			var room = GetRoomInfo(roomId);
+			if (room.Members.Any(u => u.Id == room.Owner.Id))
+				return 0;
 			if (room.Members.Count == 0)
 				cmd.CommandText = $"DELETE FROM room WHERE room_id = '{roomId}'";
 			else

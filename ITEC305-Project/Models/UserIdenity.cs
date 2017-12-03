@@ -11,6 +11,7 @@ namespace ITEC305_Project.Models
     public class UserPrincipal : ClaimsPrincipal
     {
 		public string Id { get; set; }
+		public string RoomId => Maika.GetRoomMembership(Id);
 
 		public UserPrincipal(string id, string username) : base(new GenericIdentity(username, "stateless"))
 		{

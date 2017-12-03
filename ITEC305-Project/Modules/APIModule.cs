@@ -27,7 +27,7 @@ namespace ITEC305_Project.Modules
 			Get("/user/", args => Response.AsJson(Maika.GetUser((Context.CurrentUser as UserPrincipal).Id)));
 
 			//Room
-			Get("/room", args => Response.AsJson(Maika.CreateRoom((Context.CurrentUser as UserPrincipal).Id)));
+			Get("/room", args => Response.AsJson(Maika.CreateRoom(Context.CurrentUser as UserPrincipal)));
 			Get("/room/{roomId}", args => Response.AsJson(Maika.GetRoomInfo((string)args.roomId)));
 			Get("/room/{roomId}/members", args => Response.AsJson(Maika.GetRoomMembers((string)args.roomId)));
 			Post("/room/{roomId}/name", args =>
@@ -58,7 +58,6 @@ namespace ITEC305_Project.Modules
 
 			//Invites
 			Post("/invite", args => Response.AsJson(Maika.CreateInvite(this.Bind<RoomModel>("Name", "Owner", "Members", "IsPublic").Id)));
-			Get("/invite/{inviteId}", args => null); //TODO: Is this useful?
 			Delete("/invite/{inviteId}", args =>
 			{
 				if (Maika.DeleteInvite((string)args.inviteId))
