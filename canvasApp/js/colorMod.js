@@ -1,4 +1,3 @@
-var color;
 $(document).ready(function(){
   
   color = $(".selected").css("background-color");;

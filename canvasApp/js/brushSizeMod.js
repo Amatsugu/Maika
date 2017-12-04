@@ -20,15 +20,15 @@ $(document).ready(function(){
 	$("#brushControl").append(sBrush, mBrush, lBrush, clearCanvas);
 	
 	sBrush.addEventListener("click", function() {
-		thickness = 5;
+		size = 5;
 	});
 	
 	mBrush.addEventListener("click", function() {
-		thickness = 10;
+		size = 10;
 	});
 	
 	lBrush.addEventListener("click", function() {
-		thickness = 20;
+		size = 20;
 	});
 	
 	clearCanvas.addEventListener("click", function() {
