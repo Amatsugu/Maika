@@ -13,8 +13,14 @@
     <PackageReference Include="Nancy.Authentication.Stateless" Version="2.0.0-Pre1891" />
     <PackageReference Include="Nancy.Hosting.Self" Version="2.0.0-Pre1891" />
     <PackageReference Include="Npgsql" Version="3.2.6" />
-    <PackageReference Include="SuperWebSocketNETServer" Version="0.8.0" />
+    <PackageReference Include="SuperSocket.WebSocket" Version="1.6.6.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SuperSocket.SocketEngine">
+      <HintPath>SuperSocket.SocketEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

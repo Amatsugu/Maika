@@ -51,10 +51,6 @@ namespace ITEC305_Project.Modules
 				else
 					return new Response { StatusCode = HttpStatusCode.NotAcceptable };
 			});
-			Get("/room/{roomId}/canvas", args => null); //TODO: Canvas Transactions
-			Post("/room/{roomId}/canvas", args => null); //TODO: Canvas Transactions
-			Get("/room/{roomId}/chat", args => null); //TODO: Chat Transactions
-			Post("/room/{roomId}/chat", args => null); //TODO: Chat Transactions
 
 			//Invites
 			Post("/invite", args => Response.AsJson(Maika.CreateInvite(this.Bind<RoomModel>("Name", "Owner", "Members", "IsPublic").Id)));

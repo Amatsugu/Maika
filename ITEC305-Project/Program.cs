@@ -6,7 +6,8 @@ using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase;
 using System.Threading.Tasks;
 using System.Threading;
-using SuperWebSocket;
+using System.Net;
+using SuperSocket.WebSocket;
 
 namespace ITEC305_Project
 {
@@ -30,13 +31,7 @@ namespace ITEC305_Project
 			{
 				Console.WriteLine("Starting WebSocket Server");
 				var socket = new WebSocketServer();
-				socket.Setup(new RootConfig(), new ServerConfig
-				{
-					Name = "MaikaSocket",
-					Ip = "Any",
-					Mode = SocketMode.Tcp,
-					Port = 4322
-				});
+				socket.Setup(4322);
 				socket.NewSessionConnected += MaikaSocket.OnConnected;
 				socket.NewMessageReceived += MaikaSocket.OnMessageRecieved;
 				socket.SessionClosed += MaikaSocket.OnSessionClosed;

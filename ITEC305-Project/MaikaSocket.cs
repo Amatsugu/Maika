@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using SuperWebSocket;
+using SuperSocket.WebSocket;
 
 namespace ITEC305_Project
 {
@@ -33,11 +33,12 @@ namespace ITEC305_Project
 
 		public static void OnConnected(WebSocketSession session)
 		{
-
+			Console.WriteLine(session.SessionID);
 		}
 
 		public static void OnMessageRecieved(WebSocketSession session, string message)
 		{
+			Console.WriteLine(message);
 			var m = SocketMessage.FromJSON(message);
 			switch (m.Type)
 			{

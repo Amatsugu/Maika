@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SuperWebSocket;
+using SuperSocket.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Text;

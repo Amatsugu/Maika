@@ -10,7 +10,7 @@ var size = 5;
 var color = "#000";
 var xScale, yScale;
 var capturedEvents;
-var interval = (20/60)
+var interval = 1000 * .2;
 var cH, cW;
 
 $(document).ready(function() //TODO: Capture states for network transmition
@@ -24,6 +24,10 @@ $(document).ready(function() //TODO: Capture states for network transmition
 		{
 			console.log(capturedEvents);
 		}
+		maika.send({
+			Type:"Draw",
+			Message: JSON.stringify(capturedEvents)
+		});
 		capturedEvents = [];
 		setTimeout(send, interval);
 	};
