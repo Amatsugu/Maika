@@ -1,4 +1,4 @@
-﻿using ITEC305_Project.Models;
+using ITEC305_Project.Models;
 using Newtonsoft.Json;
 using SuperSocket.SocketBase;
 using System;

@@ -15,6 +15,6 @@ namespace ITEC305_Project.Models
 
 		public bool IsMember(UserPrincipal user) => Members.Any(x => x.Id == user.Id);
 
-		public bool Join(UserPrincipal user) => Maika.JoinRoom(Id, user.Id);
+		public bool Join(UserPrincipal user) => Maika.JoinRoom(user, Id);
 	}
 }
