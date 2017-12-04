@@ -2,13 +2,22 @@ body {
 	background: gray;
 	font-family: sans-serif;
 }
+
+#canvas
+{
+	display: grid;
+	grid-template-areas: "Canvas";
+}
+
 canvas {
-	background: #fff;
 	display: block;
 	margin: 50px auto 10px;
 	border-radius: 5px;
 	box-shadow: 0 4px 0 0 #222;
+	grid-area: Canvas;
+	cursor: none;
 }
+
 .controls {
 	min-height: 60px;
 	margin: 0 auto;

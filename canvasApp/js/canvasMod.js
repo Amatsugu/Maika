@@ -5,12 +5,13 @@
 
 var flag = false, dFlag = false;
 var x1, x2, y1, y2;
-var canvas, context;
+var mCcanvas, previewCanvas, mContext, previewContext;
 var size = 5;
 var color = "#000";
 var xScale, yScale;
 var capturedEvents;
 var interval = (20/60)
+var cH, cW;
 
 $(document).ready(function() //TODO: Capture states for network transmition
 {
@@ -27,36 +28,67 @@ $(document).ready(function() //TODO: Capture states for network transmition
 		setTimeout(send, interval);
 	};
 	send();
-	canvas = $("canvas");
-	context = canvas[0].getContext("2d");
-	xScale = canvas.attr("width")/canvas.outerWidth();
-	 yScale = canvas.attr("height")/canvas.outerHeight();
+	mCanvas = $("#mainCanvas");
+	previewCanvas = $("#previewCanvas");
+	mContext = mCanvas[0].getContext("2d");
+	previewContext = previewCanvas[0].getContext("2d");
+	cW = mCanvas.attr("width");
+	cH = mCanvas.attr("height");
+	Clear(mContext, "#fff");
+	xScale = cW/mCanvas.outerWidth();
+	yScale = cH/mCanvas.outerHeight();
 	//On mouse events on the canvas
-	canvas.mousedown(function(e){
-		x1 = x2;
-		y1 = y2;
-		x2 = e.clientX - canvas.offset().left;
-		y2 = e.clientY - canvas.offset().top;
-		
-		flag = true;
-		Circle(x2, y2, size/2, color, true);
-	}).mousemove(function(e){
-		if (flag) 
-		{
-			x1 = x2;
-			y1 = y2;
-			x2 = e.clientX - canvas.offset().left;
-			y2 = e.clientY - canvas.offset().top;
-			Brush(x1, y1, x2, y2, size, color);
-		}
-	}).mouseup(function(){
-		flag = false;
-	}).mouseleave(function(){
-		canvas.mouseup();
+	mCanvas.mousedown(MouseDown).mousemove(MouseMove).mouseup(MouseUp).mouseleave(MouseOut);
+	previewCanvas.on("mousemove mousedown mouseup mouseleave", function(e)
+	{
+		mCanvas.trigger(e);
+	});
+	$(window).on("scroll", function(){ previewContext.clearRect(0, 0, cW, cH) });
+	previewCanvas.mousemove(DrawToolPreview).mouseleave(function()
+	{ 
+		previewContext.clearRect(0, 0, cW, cH);
 	});
 });
 
-function Brush(x1, y1, x2, y2, size, color, cap = "round")
+function DrawToolPreview(e)
+{
+	previewContext.clearRect(0, 0, cW, cH);
+	Circle(previewContext, e.clientX - mCanvas.offset().left, e.clientY - mCanvas.offset().top, size/2, color, true, false);
+}
+
+function MouseDown(e)
+{
+	x1 = x2;
+	y1 = y2;
+	x2 = e.clientX - mCanvas.offset().left;
+	y2 = e.clientY - mCanvas.offset().top;
+	flag = true;
+	Circle(mContext, x2, y2, size/2, color, true);
+}
+
+function MouseMove(e)
+{
+	if (flag) 
+	{
+		x1 = x2;
+		y1 = y2;
+		x2 = e.clientX - mCanvas.offset().left;
+		y2 = e.clientY - mCanvas.offset().top;
+		Brush(mContext, x1, y1, x2, y2, size, color);
+	}
+}
+
+function MouseUp(e)
+{
+	flag = false;
+}
+
+function MouseOut(e)
+{
+	flag = false;
+}
+
+function Brush(context, x1, y1, x2, y2, size, color, cap = "round")
 {
 	context.beginPath();
 	context.moveTo((x1 + window.scrollX) * xScale, (y1 + window.scrollY) * yScale);
@@ -86,7 +118,7 @@ function Brush(x1, y1, x2, y2, size, color, cap = "round")
 }
 
 
-function Circle(x, y, r, color, filled = false)
+function Circle(context, x, y, r, color, filled = false, send = true)
 {
 	context.beginPath();
 	context.fillStyle = color;
@@ -94,6 +126,8 @@ function Circle(x, y, r, color, filled = false)
 	if(filled)
 		context.fill();
 	context.closePath();
+	if(!send)
+		return;
 	capturedEvents.push( 
 	{
 		tpye:"circle",
@@ -108,12 +142,17 @@ function Circle(x, y, r, color, filled = false)
 	});
 }
 
-function Rect(x, y, h, w, color, filled  = false)
+function Rect(context, x, y, h, w, color, filled  = false, send = true)
 {
 	context.beginPath();
 	context.fillStyle = color;
-	context.Rect(x, y, h, w, color, filled);
+	if(filled)
+		context.fillRect(x, y, w, h);
+	else
+		context.strokeRect(x,y, w ,h);
 	context.closePath();
+	if(!send)
+		return;
 	capturedEvents.push( 
 		{
 			tpye:"rect",
@@ -129,4 +168,9 @@ function Rect(x, y, h, w, color, filled  = false)
 			},
 			filled:filled
 		});
+}
+
+function Clear(context, clearColor)
+{
+	Rect(context, 0, 0, cH, cW, clearColor, true, false);
 }
