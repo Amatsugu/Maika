@@ -1,0 +1,43 @@
+#head
+{
+	background-color: #f0f;
+	width: 613px;
+	height: 114px;
+}
+
+input
+{
+	border-radius: 10px;
+	background-color: rgba(244, 212, 248, 0.5);
+	padding: 10px;
+	border: 0px;
+	transition: background-color .5s;
+	box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.315);
+}
+
+button
+{
+	background-color: #a6a6a6;
+	border: 0px;
+	border-radius: 10px;
+	transition: background-color .5s;
+	color: #000;
+}
+
+button:hover, 
+button:focus
+{
+	background-color: #707070;
+}
+
+input:hover, 
+input:focus
+{
+	background-color: rgba(244, 212, 248, 1);
+}
+
+
+label
+{
+	line-height: 40px;
+}

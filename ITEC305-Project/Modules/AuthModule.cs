@@ -24,7 +24,7 @@ namespace ITEC305_Project.Modules
 				if (string.IsNullOrEmpty(token))
 					return new Response { StatusCode = HttpStatusCode.Unauthorized };
 				else
-					return new Response().WithCookie("Token", token, DateTime.Now.AddDays(5));
+					return Response.AsRedirect("/").WithCookie("Token", token, DateTime.Now.AddDays(5));
 			});
 
 			Get("/logout", _ => Response.AsRedirect("/").WithCookie("Token", null, DateTime.Now));
@@ -38,7 +38,7 @@ namespace ITEC305_Project.Modules
 				if (newUser == null)
 					return new Response().WithStatusCode(HttpStatusCode.NotAcceptable);
 				var auth = Maika.ValidateUser(user);
-				return new Response().WithCookie("Token", auth, DateTime.Now.AddDays(5));
+				return Response.AsRedirect("/").WithCookie("Token", auth, DateTime.Now.AddDays(5));
 			});
 
 			Get("/checkemail/{email}", args => (Maika.CheckEmailExists((string)args.email)) ? new Response { StatusCode = HttpStatusCode.NotAcceptable } : new Response { StatusCode = HttpStatusCode.OK });
