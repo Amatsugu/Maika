@@ -8,7 +8,7 @@ namespace ITEC305_Project.Models
 	public enum MessageType
 	{
 		Chat,
-		CanvasDraw,
+		Draw,
 		Join,
 		Leave,
 		RoomClose

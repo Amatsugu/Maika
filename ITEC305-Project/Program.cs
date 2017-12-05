@@ -2,13 +2,11 @@ using System;
 using System.Net.WebSockets;
 using Nancy;
 using Nancy.Hosting.Self;
-using SuperSocket.SocketBase.Config;
-using SuperSocket.SocketBase;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Net;
-using SuperSocket.WebSocket;
-
+using WebSockets;
+//using SuperSocket.WebSocket;\
 namespace ITEC305_Project
 {
 	class Program
@@ -31,15 +29,9 @@ namespace ITEC305_Project
 			{
 				Console.WriteLine("Starting WebSocket Server");
 				var socket = new WebSocketServer();
-				socket.Setup(4322);
-				socket.NewSessionConnected += MaikaSocket.OnConnected;
-				socket.NewMessageReceived += MaikaSocket.OnMessageRecieved;
-				socket.SessionClosed += MaikaSocket.OnSessionClosed;
-				if (!socket.Start())
-				{
-					Console.WriteLine("Error");
-					return;
-				}
+				socket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4322));
+				socket.StartAccept();
+				socket.Connected += MaikaSocket.OnConnected;
 				Console.WriteLine("WebSocket Server Started on port 4322");
 				while (true)
 					Thread.Sleep(1000);
@@ -48,6 +40,14 @@ namespace ITEC305_Project
 			webSocket.Start();
 			Console.ReadLine();
 			ts.Cancel();
+		}
+
+		private static void Socket_ConnectedAsync(object sender, WebSockets.WebSocket e)
+		{
+			var ts = new CancellationTokenSource();
+			while(true)
+				Console.WriteLine(e.ReceiveTextAsync(ts.Token).GetAwaiter().GetResult().Content);
+			//throw new NotImplementedException();
 		}
 	}
 }

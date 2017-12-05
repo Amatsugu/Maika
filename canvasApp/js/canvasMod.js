@@ -22,13 +22,13 @@ $(document).ready(function() //TODO: Capture states for network transmition
 		//TODO Send data
 		if(capturedEvents.length > 0)
 		{
-			console.log(capturedEvents);
+			//console.log(capturedEvents);
+			SendMessage({
+				Type:"Draw",
+				Message: JSON.stringify(capturedEvents)
+			});
+			capturedEvents = [];
 		}
-		maika.send({
-			Type:"Draw",
-			Message: JSON.stringify(capturedEvents)
-		});
-		capturedEvents = [];
 		setTimeout(send, interval);
 	};
 	send();
@@ -92,7 +92,7 @@ function MouseOut(e)
 	flag = false;
 }
 
-function Brush(context, x1, y1, x2, y2, size, color, cap = "round")
+function Brush(context, x1, y1, x2, y2, size, color, cap = "round", send = true)
 {
 	context.beginPath();
 	context.moveTo((x1 + window.scrollX) * xScale, (y1 + window.scrollY) * yScale);
@@ -102,9 +102,11 @@ function Brush(context, x1, y1, x2, y2, size, color, cap = "round")
 	context.strokeStyle = color;
 	context.stroke();
 	context.closePath();
+	if(!send)
+		return;
 	capturedEvents.push( 
 	{
-		tpye:"line",
+		type:"line",
 		p1:
 		{
 			x:x1,
@@ -134,11 +136,11 @@ function Circle(context, x, y, r, color, filled = false, send = true)
 		return;
 	capturedEvents.push( 
 	{
-		tpye:"circle",
+		type:"circle",
 		p:
 		{
-			x:(x + window.scrollX) * xScale,
-			y:(y + window.scrollY) * yScale
+			x:x1,
+			y:y1
 		},
 		color:color,
 		size:size,
@@ -159,11 +161,11 @@ function Rect(context, x, y, h, w, color, filled  = false, send = true)
 		return;
 	capturedEvents.push( 
 		{
-			tpye:"rect",
+			type:"rect",
 			p:
 			{
-				x:(x + window.scrollX) * xScale,
-				y:(y + window.scrollY) * yScale
+				x:x1,
+				y:y1
 			},
 			color:color,
 			size:{
