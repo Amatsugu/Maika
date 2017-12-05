@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Reflection;
+using Nancy.Configuration;
 
 namespace ITEC305_Project.Bootstrap
 {
@@ -28,11 +29,20 @@ namespace ITEC305_Project.Bootstrap
 			return favicon;
 		}*/
 
+		public override void Configure(INancyEnvironment environment)
+		{
+			base.Configure(environment);
+
+#if DEBUG
+			environment.Views(runtimeViewUpdates: true);
+#endif
+		}
+
 		protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
 		{
 			Conventions.ViewLocationConventions.Add((viewName, model, context) =>
 			{
-				return string.Concat($@"{PROJECT}Web/", viewName);
+				return $@"{PROJECT}Web/{viewName}";
 			});
 		}
 
@@ -45,7 +55,7 @@ namespace ITEC305_Project.Bootstrap
 
 		protected override void ConfigureConventions(NancyConventions nancyConventions)
 		{
-			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("res", $@"{PROJECT}/res"));
+			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("res", $@"{PROJECT}Web/res"));
 		}
 	}
 

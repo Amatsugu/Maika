@@ -13,11 +13,11 @@ namespace ITEC305_Project.Modules
 		public IndexModule()
 		{
 			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
-			this.RequiresAuthentication();
+			//this.RequiresAuthentication();
 			Get("/", _ =>
 			{
-				Console.WriteLine(Context?.CurrentUser.Identity.Name);
-				return "";
+				//Console.WriteLine(Context?.CurrentUser.Identity.Name);
+				return View["login"];
 				//return View["index", new { user = Context.CurrentUser}];
 			});
 		}

@@ -17,10 +17,4 @@
     <PackageReference Include="WebSocketServer" Version="1.0.7" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="SuperSocket.SocketEngine">
-      <HintPath>SuperSocket.SocketEngine.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
