@@ -1,4 +1,4 @@
-﻿using Nancy.ErrorHandling;
+using Nancy.ErrorHandling;
 using System;
 using System.Text;
 using Nancy;
@@ -17,7 +17,8 @@ namespace ITEC305_Project.Bootstrap
 		{
 			//HttpStatusCode.NotFound,
 			//HttpStatusCode.Unauthorized,
-			//HttpStatusCode.Checkpoint
+			//HttpStatusCode.Checkpoint,
+			//HttpStatusCode.InternalServerError
 		};
 
 		public void Handle(HttpStatusCode statusCode, NancyContext context)

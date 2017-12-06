@@ -1,0 +1,21 @@
+.modal
+{
+	flex-direction: row;
+	min-height: 200px;
+}
+
+#errorIcon
+{
+	border-radius: 50%;
+	background-color: #f4d4f8;
+	height: 100px;
+	width: 100px;
+	line-height: 100px;
+	text-align: center;
+	margin-right: 15px;
+}
+
+p
+{
+	font-size: 25px;
+}

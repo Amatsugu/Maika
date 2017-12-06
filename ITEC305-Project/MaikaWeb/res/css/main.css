@@ -1,3 +1,8 @@
+*
+{
+	font-family: sans-serif;
+}
+
 body
 {
 	background-color: #333;
@@ -7,6 +12,7 @@ body
 	background-attachment: fixed;
 	margin: 0;
 }
+
 #wrapper
 {
 	position: fixed;
@@ -22,7 +28,7 @@ body
 #wrapper #blurBG
 {
 	border-radius: 20px;
-	background-image: url(/res/img/bgBlur.png);
+	background-image: url("/res/img/bgBlur.png");
 	background-repeat:no-repeat;
 	background-position: center;
 	background-attachment: fixed;
