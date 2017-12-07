@@ -15,6 +15,8 @@ namespace ITEC305_Project.Modules
 			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
 			Get("/", _ =>
 			{
+				if (Context.CurrentUser != null)
+					return Response.AsRedirect("/r/");
 				return View["login"];
 			});
 		}

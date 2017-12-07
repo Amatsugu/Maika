@@ -11,14 +11,17 @@ input
 	background-color: #f4d4f880;
 	padding: 10px;
 	border: 0px;
-	transition: background-color .5s;
+	border: 1px solid transparent;
+	transition: background-color .5s, border .5s;
 	box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.315);
+	outline: none;
 }
 
 button
 {
 	background-color: #a6a6a6;
 	border: 0px;
+	padding: 10px;
 	border-radius: 10px;
 	transition: background-color .5s;
 	color: #000;
@@ -40,4 +43,9 @@ input:focus
 label
 {
 	line-height: 40px;
+}
+
+.error
+{
+	border: 1px solid #f00;
 }

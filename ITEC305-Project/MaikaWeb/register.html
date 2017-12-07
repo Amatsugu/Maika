@@ -6,16 +6,18 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>Register</title>
 		<meta name="theme-color" content="##f4d4f8">
-		<link rel="stylesheet" href="res/css/main.css">
-		<link rel="stylesheet" href="res/css/register.css">		
-		<link rel="stylesheet" href="res/css/form.css">
+		<link rel="stylesheet" href="/res/css/main.css">
+		<link rel="stylesheet" href="/res/css/register.css">		
+		<link rel="stylesheet" href="/res/css/form.css">
+		<script src="/res/js/jquery-3.1.1.min.js"></script>
+		<script src="/res/js/register.js"></script>
 	</head>
 	<body>
 		<div id="wrapper">
 			<div id="blurBG">
 				<div class="modal">
 					<img id="head" src="#"/>
-					<form action="/auth/register">
+					<form action="/auth/register" method="POST">
 						<div id="registerForm">
 							<label id="userLabel">Username</label>
 							<input id="user" name="Username" placeholder="Username" required>

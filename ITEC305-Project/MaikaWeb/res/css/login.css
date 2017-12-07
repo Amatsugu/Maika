@@ -19,18 +19,6 @@
 	
 }
 
-button:hover, 
-button:focus
-{
-	background-color: #707070;
-}
-
-input:hover, 
-input:focus
-{
-	background-color: rgba(244, 212, 248, 1);
-}
-
 #logo
 {
 	grid-area: Logo;

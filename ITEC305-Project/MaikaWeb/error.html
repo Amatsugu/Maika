@@ -4,16 +4,16 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>Login</title>
-		<link rel="stylesheet" href="res/css/main.css">
-		<link rel="stylesheet" href="res/css/error.css">
+		<title>Error | @Model.errorCode</title>
+		<link rel="stylesheet" href="/res/css/main.css">
+		<link rel="stylesheet" href="/res/css/error.css">
 		<meta name="theme-color" content="##f4d4f8">
 	</head>
 	<body>
 		<div id="wrapper">
 			<div id="blurBG">
 				<div class="modal">
-					<div id="errorIcon">ERR</div>
+					<div id="errorIcon">@Model.errorCode</div>
 					<p>Oops, looks like there is something wrong with it...</p>
 				</div>
 			</div>

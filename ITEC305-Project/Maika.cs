@@ -31,7 +31,6 @@ namespace ITEC305_Project
 			}
 		});
 
-
 		private static T RunCommand<T>(Func<NpgsqlCommand, T> func)
 		{
 			using (var con = new NpgsqlConnection(dBCredentials.ConntectionString))
@@ -111,7 +110,6 @@ namespace ITEC305_Project
 				LeaveRoom(owner);
 			var id = Authenticator.GenerateToken();
 			cmd.CommandText = $"INSERT INTO room (room_id, owner_id, title) VALUES('{id}', '{owner.Id}', 'New Room');";
-			cmd.CommandText += $"DELETE FROM room_member WHERE user_id = '{owner.Id}';";
 			cmd.CommandText += $"INSERT INTO room_member VALUES('{id}',  '{owner.Id}');";
 			cmd.ExecuteNonQuery();
 			var u = GetUser(owner.Id);
@@ -147,7 +145,7 @@ namespace ITEC305_Project
 		{
 			if (user.RoomId != null)
 				LeaveRoom(user);
-			cmd.CommandText = $"INSERT INTO room_member (room_id, user_id) VALUES ({roomID}, {user.Id})";
+			cmd.CommandText = $"INSERT INTO room_member VALUES('{roomID}', '{user.Id}')";
 			return cmd.ExecuteNonQuery() > 0;
 		});
 
@@ -219,6 +217,25 @@ namespace ITEC305_Project
 				RoomId = roomId
 			};
 		});
+
+		internal static InviteModel GetInvite(string inviteId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"SELECT room_id FROM invite WHERE invite_id = '{inviteId}'";
+			try
+			{
+				return new InviteModel
+				{
+					Id = inviteId,
+					RoomId = cmd.ExecuteScalar() as string
+				};
+			}catch
+			{
+				return null;
+			}
+		});
+
+		internal static bool AcceptInvite(UserPrincipal user, InviteModel invite) => JoinRoom(user, invite.RoomId);
+			
 
 		internal static bool DeleteInvite(string inviteId) => RunCommand(cmd =>
 		{

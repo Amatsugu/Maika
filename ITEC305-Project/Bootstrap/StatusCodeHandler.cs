@@ -3,10 +3,6 @@ using System;
 using System.Text;
 using Nancy;
 using System.Linq;
-using ITEC305_Project.Models;
-using Nancy.Configuration;
-using Nancy.Responses.Negotiation;
-using Nancy.Responses;
 
 namespace ITEC305_Project.Bootstrap
 {
@@ -15,25 +11,15 @@ namespace ITEC305_Project.Bootstrap
 
 		private readonly HttpStatusCode[] _handledCodes = new HttpStatusCode[]
 		{
-			//HttpStatusCode.NotFound,
-			//HttpStatusCode.Unauthorized,
-			//HttpStatusCode.Checkpoint,
-			//HttpStatusCode.InternalServerError
+			HttpStatusCode.NotFound,
+			HttpStatusCode.Unauthorized,
+			HttpStatusCode.Checkpoint,
+			HttpStatusCode.InternalServerError
 		};
 
 		public void Handle(HttpStatusCode statusCode, NancyContext context)
 		{
-			if (statusCode == HttpStatusCode.Unauthorized && context.Request.Path == "/")
-			{
-				context.Response = new Response //TODO: ERROR Codes
-				{
-					
-				};
-			}
-			else
-			{
-				context.Response = null; //TODO: ERROR Codes
-			}
+			context.Response = new Response().WithHeader("Location", $"/error/{(int)statusCode}").WithStatusCode(HttpStatusCode.TemporaryRedirect);
 		}
 
 		public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context) => _handledCodes.Any(x => x == statusCode);

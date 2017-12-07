@@ -1,0 +1,23 @@
+.modal
+{
+	flex-direction: row;
+	min-height: 200px;
+}
+
+#inviteIcon
+{
+	border-radius: 50%;
+	background-color: #f4d4f8;
+	height: 150px;
+	width: 150px;
+	line-height: 150px;
+	background-image: url("/res/img/Default User Icon.png");
+	background-size: contain;	
+	text-align: center;
+}
+
+p
+{
+	font-size: 25px;
+	margin: 15px;
+}

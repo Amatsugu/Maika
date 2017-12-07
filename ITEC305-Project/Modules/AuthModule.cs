@@ -24,7 +24,7 @@ namespace ITEC305_Project.Modules
 				if (string.IsNullOrEmpty(token))
 					return new Response { StatusCode = HttpStatusCode.Unauthorized };
 				else
-					return Response.AsRedirect("/").WithCookie("Token", token, DateTime.Now.AddDays(5));
+					return Response.AsRedirect("/r").WithCookie("Token", token, DateTime.Now.AddDays(5));
 			});
 
 			Get("/logout", _ => Response.AsRedirect("/").WithCookie("Token", null, DateTime.Now));

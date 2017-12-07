@@ -6,19 +6,19 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>Login</title>
 		<meta name="theme-color" content="##f4d4f8">
-		<link rel="stylesheet" href="res/css/main.css">
-		<link rel="stylesheet" href="res/css/login.css">
-		<link rel="stylesheet" href="res/css/form.css">
+		<link rel="stylesheet" href="/res/css/main.css">
+		<link rel="stylesheet" href="/res/css/login.css">
+		<link rel="stylesheet" href="/res/css/form.css">
 	</head>
 	<body>
 		<div id="wrapper">
 			<div id="blurBG">
 				<div class="modal">
 					<img id="head" src="#"/>
-					<form action="/auth/login">
+					<form action="/auth/login" method="POST">
 						<div id="loginForm">
 							<div id="logo"></div>
-							<input id="user" name="Username" placeholder="Username" required>
+							<input id="user" name="Email" type="email" placeholder="Email" required>
 							<input id="pass" name="Password" type="password" placeholder="Password" required>
 							<a id="register" href="/register">Register</a>
 							<button id="submit" type="submit">Login</button>
