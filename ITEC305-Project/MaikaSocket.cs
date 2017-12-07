@@ -41,7 +41,7 @@ namespace ITEC305_Project
 			{
 				Session = e
 			};
-			Socket.Users.Add(u);
+			//Socket.Users.Add(u);
 			if (Socket.draw.Count > 0)
 				Socket.draw.ForEach(m =>
 				{
@@ -76,15 +76,20 @@ namespace ITEC305_Project
 			switch (m.Type)
 			{
 				case MessageType.Join:
+					user.UserId = m.Message;
 					Socket.Users.ForEach(u => SendMessage(u.Session, new SocketMessage
 					{
 						Type = MessageType.Join,
-						Message = m.User.UserId //TODO: Finalize Message Contents
+						Message = m.Message 
 					}.ToString()));
-					Socket.Users.Add(m.User);
+					Socket.Users.Add(user);
 					break;
 				default:
-					Socket.Users.ForEach(u => SendMessage(u.Session, message)); //TODO: Check User
+					Socket.Users.ForEach(u =>
+					{
+						if (u.UserId != user.UserId)
+							SendMessage(u.Session, message);
+					}); 
 					if (m.Type == MessageType.Draw)
 						Socket.draw.Add(m.Message);
 					break;
