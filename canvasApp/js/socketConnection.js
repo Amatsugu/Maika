@@ -2,6 +2,13 @@ var maika;
 $(document).ready(function(){
 	maika = new WebSocket("ws://localhost:4322");
 	maika.onopen =function(e){
+		SendMessage({
+			Type:"Join",
+			Message:JSON.stringify({
+				Id:"id",
+				Username:"usrname"
+			})
+		});
 		console.log("Ready");
 	};
 
@@ -24,7 +31,7 @@ $(document).ready(function(){
 						Brush(mContext, e.p1.x, e.p1.y, e.p2.x, e.p2.y, e.size, e.color,e.cap, false);
 				}
 			});
-			//console.log(drawData);
+			console.log(drawData);
 		}
 		console.log(data);
 	};

@@ -76,7 +76,9 @@ namespace ITEC305_Project
 			switch (m.Type)
 			{
 				case MessageType.Join:
-					user.UserId = m.Message;
+					var uM = JsonConvert.DeserializeObject<UserModel>(m.Message);
+					user.UserId = uM.Id;
+					user.Username = uM.Username;
 					Socket.Users.ForEach(u => SendMessage(u.Session, new SocketMessage
 					{
 						Type = MessageType.Join,
