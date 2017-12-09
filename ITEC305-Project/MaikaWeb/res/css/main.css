@@ -27,6 +27,9 @@ body
 
 #wrapper #blurBG
 {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	border-radius: 20px;
 	background-image: url("/res/img/bgBlur.png");
 	background-repeat:no-repeat;
@@ -36,14 +39,30 @@ body
 
 .modal
 {
+	padding: 20px;
 	border-radius: 10px;
 	min-width: 695px;
 	min-height: 389px;
-	padding: 20px;
 	background-color: rgba(235, 235, 235, .10);
 	display: flex;
 	flex-direction: column;
 	flex-shrink: 0;
 	justify-content: center;
 	align-items: center;
+}
+
+@media only screen and (max-width: 695px)
+{
+	#wrapper #blurBG
+	{
+		width: 100%;
+		border-radius: 0px;
+	}
+
+	.modal
+	{
+		border-radius: 0px;
+		min-width: 0px;
+		width:100%;
+	}
 }

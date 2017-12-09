@@ -21,3 +21,13 @@ p
 	font-size: 25px;
 	margin: 15px;
 }
+
+@media only screen and (max-width: 695px)
+{
+	.modal
+	{
+		min-height: 300px;
+		flex-direction: column;
+		text-align: center;
+	}
+}

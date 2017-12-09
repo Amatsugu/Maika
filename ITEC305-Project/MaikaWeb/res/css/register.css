@@ -14,6 +14,14 @@
 	
 }
 
+@media only screen and (max-width: 695px)
+{
+	#registerForm
+	{
+		grid-template-columns: 140px repeat(2, 80px);
+	}
+}
+
 #logo
 {
 	grid-area: Logo;
