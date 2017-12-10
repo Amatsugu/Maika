@@ -19,6 +19,10 @@ namespace Maika.Bootstrap
 
 		public void Handle(HttpStatusCode statusCode, NancyContext context)
 		{
+			//TODO: Invite Redirection
+			//if(context.Request.Path.Contains(@"/i/"))
+			//	context.Response = new Response().WithHeader("Location", $"/error/{(int)statusCode}").WithStatusCode(HttpStatusCode.TemporaryRedirect);
+
 			context.Response = new Response().WithHeader("Location", $"/error/{(int)statusCode}").WithStatusCode(HttpStatusCode.TemporaryRedirect);
 		}
 

@@ -191,7 +191,7 @@ namespace Maika
 
 		internal static bool SetRoomName(string roomId, string userId, string roomName) => RunCommand(cmd =>
 		{
-			cmd.CommandText = $"UPDATE room SET title = '{Uri.EscapeDataString(roomName ?? "")}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
+			cmd.CommandText = $"UPDATE room SET title = '{Uri.EscapeDataString(roomName ?? "")}' WHERE room_id = '{roomId}'";
 			return cmd.ExecuteNonQuery() > 0;
 		});
 

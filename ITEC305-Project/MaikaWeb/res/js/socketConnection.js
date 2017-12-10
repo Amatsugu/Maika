@@ -3,7 +3,10 @@ var inviteButton;
 var title;
 var curUser;
 $(document).ready(function(){
-	maika = new WebSocket("wss://maikaws.luminousvector.com/");
+	var host = "wss://maikaws.luminousvector.com/";
+	if(window.location.hostname.includes("localhost"))
+		host = "ws:localhost:4322";
+	maika = new WebSocket(host);
 	userList = $("#userList");
 	inviteButton = $(".invite");
 	title = $("#title").on("propertychange change keyup input paste", e =>{
@@ -11,6 +14,8 @@ $(document).ready(function(){
 			Type: "RoomInfo",
 			Message:title.val()
 		});
+		document.title = title.val();
+		console.log(curUser.roomId);
 		$.ajax({
 			url:"/api/room/"+ curUser.roomId +"/name",
 			method:"POST",

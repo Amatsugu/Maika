@@ -42,14 +42,16 @@ namespace Maika
 				Session = e
 			};
 			//Socket.Users.Add(u);
+			bool open = true;
 			
-			while(true)
+			while(open)
 			{
 				try
 				{
 					if (e.State == WebSocketState.Closed || e.State == WebSocketState.CloseReceived)
 					{
 						OnSessionClosed(u);
+						open = false;
 						break;
 					}
 					var m = await e.ReceiveTextAsync(Socket.ts.Token);
@@ -57,6 +59,8 @@ namespace Maika
 				}catch
 				{
 					OnSessionClosed(u);
+					open = false;
+					break;
 				}
 			}
 		}
@@ -99,7 +103,7 @@ namespace Maika
 					SendMessage(user.Session, new SocketMessage
 					{
 						Type = MessageType.JoinInfo,
-						Message = JsonConvert.SerializeObject(from SocketUser u in Socket.Users select new UserModel { Id = u.UserId, Username = u.Username })
+						Message = JsonConvert.SerializeObject(from SocketUser u in Socket.Users where u.RoomId == user.RoomId select new UserModel { Id = u.UserId, Username = u.Username })
 					});
 					break;
 				default:
@@ -120,16 +124,21 @@ namespace Maika
 		{
 			Console.WriteLine($"User Leave: {user.Username} | {user.UserId}");
 			Socket.Users.Remove(user);
-			Socket.Users.ForEach(u => SendMessage(u.Session, new SocketMessage
+			Socket.Users.ForEach(u =>
 			{
-				User = null,
-				Type = MessageType.Leave,
-				Message = JsonConvert.SerializeObject(new UserModel
+				if (u.RoomId != user.RoomId)
+					return;
+				SendMessage(u.Session, new SocketMessage
 				{
-					Id = user.UserId,
-					Username = user.Username
-				})
-			}));
+					User = null,
+					Type = MessageType.Leave,
+					Message = JsonConvert.SerializeObject(new UserModel
+					{
+						Id = user.UserId,
+						Username = user.Username
+					})
+				});
+			});
 			var keys = Socket.drawHistory.Keys.ToArray();
 			foreach (string room in keys)
 			{
@@ -144,7 +153,15 @@ namespace Maika
 
 		public static async void SendMessage(WebSockets.WebSocket socket, string message)
 		{
-			await socket.SendTextAsync(message, true, Socket.ts.Token);
+			try
+			{
+				if (socket.State != WebSocketState.Open)
+					return;
+				await socket.SendTextAsync(message, true, Socket.ts.Token);
+			}catch(Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
 		}
 
 		public static void SendCloseMessage(string roomId) => Socket.Users.ForEach(u =>
