@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ITEC305_Project
+namespace Maika
 {
     public static class Utils
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ITEC305_Project.Models
+namespace Maika.Models
 {
     class RoomModel
     {
@@ -15,6 +15,6 @@ namespace ITEC305_Project.Models
 
 		public bool IsMember(UserPrincipal user) => Members.Any(x => x.Id == user.Id);
 
-		public bool Join(UserPrincipal user) => Maika.JoinRoom(user, Id);
+		public bool Join(UserPrincipal user) => MaikaCore.JoinRoom(user, Id);
 	}
 }

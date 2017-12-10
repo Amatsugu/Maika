@@ -4,31 +4,31 @@ using System.Text;
 using Nancy;
 using Nancy.Security;
 using Nancy.Authentication.Stateless;
-using ITEC305_Project.Models;
+using Maika.Models;
 
-namespace ITEC305_Project.Modules
+namespace Maika.Modules
 {
     public class InvitedModule : NancyModule
     {
 		public InvitedModule()
 		{
-			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
+			StatelessAuthentication.Enable(this, MaikaCore.StatelessConfig);
 			this.RequiresAuthentication();
-			Get("/invite/{inviteId}", args =>
+			Get("/i/{inviteId}", args =>
 			{
-				var invite = Maika.GetInvite((string)args.inviteId);
+				var invite = MaikaCore.GetInvite((string)args.inviteId);
 				if (invite != null)
-					return View["invite", Maika.GetRoomInfo(invite.RoomId)];
+					return View["invite", MaikaCore.GetRoomInfo(invite.RoomId)];
 				else
 					return Response.AsRedirect("/error/404");
 			});
 
-			Post("/invite/{inviteId}", args =>
+			Post("/i/{inviteId}", args =>
 			{
-				var invite = Maika.GetInvite((string)args.inviteId);
+				var invite = MaikaCore.GetInvite((string)args.inviteId);
 				if (invite != null)
 				{
-					Maika.AcceptInvite(Context.CurrentUser as UserPrincipal, invite);
+					MaikaCore.AcceptInvite(Context.CurrentUser as UserPrincipal, invite);
 					return Response.AsRedirect($"/r/{invite.RoomId}");
 				}
 				else

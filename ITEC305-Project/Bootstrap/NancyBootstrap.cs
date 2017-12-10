@@ -9,11 +9,11 @@ using System.Text;
 using System.Reflection;
 using Nancy.Configuration;
 
-namespace ITEC305_Project.Bootstrap
+namespace Maika.Bootstrap
 {
 	public class NancyBootstrap : DefaultNancyBootstrapper
 	{
-		private string PROJECT => nameof(Maika);
+		private string PROJECT => "Maika";
 		/*private byte[] favicon;
 
 		protected override byte[] FavIcon

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ITEC305_Project.Models
+namespace Maika.Models
 {
 	public static class StatusCodeMessages
 	{

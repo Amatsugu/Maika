@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using WebSockets;
 
-namespace ITEC305_Project.Models
+namespace Maika.Models
 {
     public class SocketUser
     {

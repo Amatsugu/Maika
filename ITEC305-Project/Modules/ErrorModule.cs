@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Nancy;
 
-namespace ITEC305_Project.Modules
+namespace Maika.Modules
 {
     public class ErrorModule : NancyModule
     {
@@ -11,7 +11,7 @@ namespace ITEC305_Project.Modules
 		{
 			Get("/{errorCode}", args =>
 			{
-				return View["error", args];
+				return View["error"].WithModel((object)args).WithStatusCode((int)args.errorCode);
 			});
 		}
     }

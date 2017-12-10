@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Claims;
-using ITEC305_Project.Models;
-using ITEC305_Project.Auth;
+using Maika.Models;
+using Maika.Auth;
 using Npgsql;
 
-namespace ITEC305_Project
+namespace Maika
 {
-	public static class Maika
+	public static class MaikaCore
 	{
 		public const string HOST = "maika.luminousvector.com";
 		private static readonly DBCredentials dBCredentials = DBCredentials.FromJSON("DB_Credentials.json");
@@ -72,7 +72,7 @@ namespace ITEC305_Project
 
 		internal static UserModel GetUser(string userId) => RunCommand(cmd =>
 		{
-			cmd.CommandText = $"SELECT username FROM users WHERE user_id = '{userId}'";
+			cmd.CommandText = $"SELECT username, room_id FROM users u, room_member r WHERE u.user_id = '{userId}' AND r.user_id = '{userId}'";
 			using (var reader = cmd.ExecuteReader())
 			{
 				if (!reader.HasRows)
@@ -81,7 +81,8 @@ namespace ITEC305_Project
 				return new UserModel
 				{
 					Id = userId,
-					Username = Uri.UnescapeDataString(reader.GetString(0))
+					Username = Uri.UnescapeDataString(reader.GetString(0)),
+					RoomId = reader.GetString(1)
 				};
 			}
 		});
@@ -190,7 +191,7 @@ namespace ITEC305_Project
 
 		internal static bool SetRoomName(string roomId, string userId, string roomName) => RunCommand(cmd =>
 		{
-			cmd.CommandText = $"UPDATE room SET title = '{Uri.EscapeDataString(roomName)}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
+			cmd.CommandText = $"UPDATE room SET title = '{Uri.EscapeDataString(roomName ?? "")}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
 			return cmd.ExecuteNonQuery() > 0;
 		});
 
@@ -206,8 +207,10 @@ namespace ITEC305_Project
 			return cmd.ExecuteNonQuery() > 0;
 		});
 
-		internal static InviteModel CreateInvite(string roomId) => RunCommand(cmd =>
+		internal static InviteModel CreateInvite(string roomId, UserPrincipal user) => RunCommand(cmd =>
 		{
+			if (GetRoomMembership(user.Id) != roomId)
+				return null;
 			var invite = Authenticator.GenerateToken();
 			cmd.CommandText = $"INSERT INTO invite VALUES ('{invite}', '{roomId}')";
 			cmd.ExecuteNonQuery();

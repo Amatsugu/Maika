@@ -4,7 +4,7 @@ using System.Text;
 using Nancy;
 using System.Linq;
 
-namespace ITEC305_Project.Bootstrap
+namespace Maika.Bootstrap
 {
 	public class StatusCodeHandler : IStatusCodeHandler
 	{
@@ -22,6 +22,11 @@ namespace ITEC305_Project.Bootstrap
 			context.Response = new Response().WithHeader("Location", $"/error/{(int)statusCode}").WithStatusCode(HttpStatusCode.TemporaryRedirect);
 		}
 
-		public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context) => _handledCodes.Any(x => x == statusCode);
+		public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
+		{
+			if (context.Request.Path.Contains(@"/error/"))
+				return false;
+			return _handledCodes.Any(x => x == statusCode);
+		}
 	}
 }

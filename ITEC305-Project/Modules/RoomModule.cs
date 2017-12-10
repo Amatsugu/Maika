@@ -4,15 +4,15 @@ using System.Text;
 using Nancy;
 using Nancy.Security;
 using Nancy.Authentication.Stateless;
-using ITEC305_Project.Models;
+using Maika.Models;
 
-namespace ITEC305_Project.Modules
+namespace Maika.Modules
 {
     public class RoomModule : NancyModule
     {
 		public RoomModule() : base("/r")
 		{
-			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
+			StatelessAuthentication.Enable(this, MaikaCore.StatelessConfig);
 			this.RequiresAuthentication();
 
 			Get("/", args =>
@@ -20,7 +20,7 @@ namespace ITEC305_Project.Modules
 				var user = Context.CurrentUser as UserPrincipal;
 				if(user.RoomId == null)
 				{
-					var room = Maika.CreateRoom(user);
+					var room = MaikaCore.CreateRoom(user);
 					room.Join(user);
 					return Response.AsRedirect($"/r/{room.Id}");
 				}
@@ -30,7 +30,7 @@ namespace ITEC305_Project.Modules
 
 			Get("/{roomId}", args =>
 			{
-				var room = Maika.GetRoomInfo((string)args.roomId);
+				var room = MaikaCore.GetRoomInfo((string)args.roomId);
 				if (room != null)
 				{
 					var user = Context.CurrentUser as UserPrincipal;

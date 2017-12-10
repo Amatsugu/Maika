@@ -6,25 +6,34 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Net;
 using WebSockets;
-//using SuperSocket.WebSocket;\
-namespace ITEC305_Project
+using System.IO;
+using Newtonsoft.Json;
+
+namespace Maika
 {
 	class Program
 	{
 		static void Main(string[] args)
 		{
-			var ts = new CancellationTokenSource();
-			var ct = ts.Token;
+			//var ts = new CancellationTokenSource();
+			//var ct = ts.Token;
 			var nancy = new Task(() =>
 			{
 				Console.WriteLine("Starting Host");
-				var uri = new Uri("http://localhost:4321");
-				var host = new NancyHost(uri);
-				host.Start();
-				Console.WriteLine($"Hosting on {uri}...");
+				try
+				{
+					var uri = new Uri("http://localhost:5321");
+					var host = new NancyHost(uri);
+					host.Start();
+					Console.WriteLine($"Hosting on {uri}...");
+				}catch(Exception e)
+				{
+					//Console.WriteLine(e.Message);
+					Console.WriteLine(e.Message);
+				}
 				while (true)
 					Thread.Sleep(1000);
-			}, ts.Token);
+			});
 			var webSocket = new Task(() =>
 			{
 				Console.WriteLine("Starting WebSocket Server");
@@ -35,19 +44,10 @@ namespace ITEC305_Project
 				Console.WriteLine("WebSocket Server Started on port 4322");
 				while (true)
 					Thread.Sleep(1000);
-			}, ts.Token);
+			});
 			nancy.Start();
 			webSocket.Start();
 			Console.ReadLine();
-			ts.Cancel();
-		}
-
-		private static void Socket_ConnectedAsync(object sender, WebSockets.WebSocket e)
-		{
-			var ts = new CancellationTokenSource();
-			while(true)
-				Console.WriteLine(e.ReceiveTextAsync(ts.Token).GetAwaiter().GetResult().Content);
-			//throw new NotImplementedException();
 		}
 	}
 }

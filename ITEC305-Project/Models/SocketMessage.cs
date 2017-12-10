@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ITEC305_Project.Models
+namespace Maika.Models
 {
 	public enum MessageType
 	{
@@ -11,12 +12,15 @@ namespace ITEC305_Project.Models
 		Draw,
 		Join,
 		Leave,
-		RoomClose
+		RoomClose,
+		JoinInfo,
+		RoomInfo
 	}
 
     public class SocketMessage
     {
 		public SocketUser User { get; set; }
+		[JsonConverter(typeof(StringEnumConverter))]
 		public MessageType Type { get; set; }
 		public string Message { get; set; }
 

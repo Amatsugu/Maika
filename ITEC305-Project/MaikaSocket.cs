@@ -1,4 +1,4 @@
-using ITEC305_Project.Models;
+using Maika.Models;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -8,7 +8,7 @@ using WebSockets;
 using System.Threading;
 using System.Net.WebSockets;
 
-namespace ITEC305_Project
+namespace Maika
 {
 	public class MaikaSocket
 	{
@@ -26,13 +26,13 @@ namespace ITEC305_Project
 		private static MaikaSocket instance;
 		private CancellationTokenSource ts;
 		public List<SocketUser> Users;
-		public List<string> draw;
+		public Dictionary<string, List<string>> drawHistory;
 
 		private MaikaSocket()
 		{
 			Users = new List<SocketUser>();
 			ts = new CancellationTokenSource();
-			draw = new List<string>();
+			drawHistory = new Dictionary<string, List<string>>();
 		}
 
 		public static async void OnConnected(object sender, WebSockets.WebSocket e)
@@ -42,15 +42,7 @@ namespace ITEC305_Project
 				Session = e
 			};
 			//Socket.Users.Add(u);
-			if (Socket.draw.Count > 0)
-				Socket.draw.ForEach(m =>
-				{
-					SendMessage(e, new SocketMessage
-					{
-						Type = MessageType.Draw,
-						Message = m
-					}.ToString());
-				});
+			
 			while(true)
 			{
 				try
@@ -77,37 +69,78 @@ namespace ITEC305_Project
 			{
 				case MessageType.Join:
 					var uM = JsonConvert.DeserializeObject<UserModel>(m.Message);
+					Console.WriteLine($"User Join: {uM.Username} | {uM.Id}");
 					user.UserId = uM.Id;
 					user.Username = uM.Username;
-					Socket.Users.ForEach(u => SendMessage(u.Session, new SocketMessage
+					user.RoomId = uM.RoomId;
+					if (!Socket.drawHistory.ContainsKey(uM.RoomId))
+						Socket.drawHistory.Add(uM.RoomId, new List<string>());
+					//Send exsisting Drawing
+					Socket.drawHistory[uM.RoomId].ForEach(d =>
 					{
-						Type = MessageType.Join,
-						Message = m.Message 
-					}.ToString()));
+						SendMessage(user.Session, new SocketMessage
+						{
+							Type = MessageType.Draw,
+							Message = d
+						});
+					});
+					//Send Join Message
+					Socket.Users.ForEach(u =>
+					{
+						if(u.RoomId == uM.RoomId)
+							SendMessage(u.Session, new SocketMessage
+							{
+								Type = MessageType.Join,
+								Message = m.Message
+							});
+					});
+					//Send User List
 					Socket.Users.Add(user);
+					SendMessage(user.Session, new SocketMessage
+					{
+						Type = MessageType.JoinInfo,
+						Message = JsonConvert.SerializeObject(from SocketUser u in Socket.Users select new UserModel { Id = u.UserId, Username = u.Username })
+					});
 					break;
 				default:
 					Socket.Users.ForEach(u =>
 					{
+						if (u.RoomId != user.RoomId)
+							return;
 						if (u.UserId != user.UserId)
 							SendMessage(u.Session, message);
 					}); 
 					if (m.Type == MessageType.Draw)
-						Socket.draw.Add(m.Message);
+						Socket.drawHistory[user.RoomId].Add(m.Message);
 					break;
 			}
 		}
 
 		public static void OnSessionClosed(SocketUser user)
 		{
+			Console.WriteLine($"User Leave: {user.Username} | {user.UserId}");
 			Socket.Users.Remove(user);
 			Socket.Users.ForEach(u => SendMessage(u.Session, new SocketMessage
 			{
 				User = null,
 				Type = MessageType.Leave,
-				Message = user.UserId //TODO: Finalize Message Contents
-			}.ToString()));
+				Message = JsonConvert.SerializeObject(new UserModel
+				{
+					Id = user.UserId,
+					Username = user.Username
+				})
+			}));
+			var keys = Socket.drawHistory.Keys.ToArray();
+			foreach (string room in keys)
+			{
+				if(Socket.Users.All(u => u.RoomId != room))
+				{
+					Socket.drawHistory.Remove(room);
+				}
+			}
 		}
+
+		public static void SendMessage(WebSockets.WebSocket socket, SocketMessage message) => SendMessage(socket, message.ToString());
 
 		public static async void SendMessage(WebSockets.WebSocket socket, string message)
 		{

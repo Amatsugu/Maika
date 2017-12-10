@@ -4,15 +4,15 @@ using System.Text;
 using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Security;
-using ITEC305_Project.Models;
+using Maika.Models;
 
-namespace ITEC305_Project.Modules
+namespace Maika.Modules
 {
     public class IndexModule : NancyModule
     {
 		public IndexModule()
 		{
-			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
+			StatelessAuthentication.Enable(this, MaikaCore.StatelessConfig);
 			Get("/", _ =>
 			{
 				if (Context.CurrentUser != null)

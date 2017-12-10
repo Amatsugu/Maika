@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace ITEC305_Project.Extensions
+namespace Maika.Extensions
 {
 	public static class Convert
 	{
