@@ -39,6 +39,7 @@ namespace Maika
 				Console.WriteLine("Starting WebSocket Server");
 				var socket = new WebSocketServer();
 				socket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4322));
+				//socket.ClientKeepAliveInterval = new TimeSpan(1, 0, 0);
 				socket.StartAccept();
 				socket.Connected += MaikaSocket.OnConnected;
 				Console.WriteLine("WebSocket Server Started on port 4322");
