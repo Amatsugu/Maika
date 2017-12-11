@@ -15,7 +15,7 @@ $(document).ready(function(){
 			Message:title.val()
 		});
 		document.title = title.val();
-		console.log(curUser.roomId);
+		//console.log(curUser.roomId);
 		$.ajax({
 			url:"/api/room/"+ curUser.roomId +"/name",
 			method:"POST",
@@ -43,7 +43,7 @@ $(document).ready(function(){
 
 	maika.onmessage = function(e){
 		var data = JSON.parse(e.data);
-		console.log(data);
+		//console.log(data);
 		switch(data.Type)
 		{
 			case "Draw":
@@ -83,6 +83,7 @@ $(document).ready(function(){
 				break;
 			case "RoomInfo":
 				title.val(data.Message);
+				document.title = data.Message;
 				break;
 		}
 	};
