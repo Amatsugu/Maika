@@ -58,7 +58,37 @@ $(document).ready(function() //TODO: Capture states for network transmition
 	previewCanvas.mousemove(DrawToolPreview).mouseleave(function()
 	{ 
 		previewContext.clearRect(0, 0, cW, cH);
-	});
+    });
+
+    /* Toggle #sliderDropDown */
+    $("#lineButton").click(function () {
+        $("#sliderDropdown").toggle();
+    });
+
+    /* Update size value on change */
+    $("#lineSlider").on('change', function () {
+        var size = $(this).val();
+    });
+
+    $("#lineSlider").click(function () {
+        size = parseInt($("#lineSlider").val());
+        $("#lineSlider").trigger('change');
+    });
+
+    /* line tool Dropdown Style */
+    /*
+    $("#smallLine").click(function () {
+        size = $("#smallLine").val();
+    });
+
+    $("#mediumLine").click(function () {
+        size = $("#mediumLine").val();
+    });
+
+    $("#largeLine").click(function () {
+        size = $("#largeLine").val();
+    });
+    */
 });
 
 function DrawToolPreview(e)

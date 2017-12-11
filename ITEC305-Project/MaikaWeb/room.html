@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
@@ -20,12 +20,27 @@
 			<input id="title" type="text" value="@Model.Name">
 			<div id="blurBG">
 				<div class="modal">
-					<div id="toolBar">
-						<div class="tool brush"></div>
-						<div class="tool pencil"></div>
-						<div class="tool size"></div>
-						<div class="tool color"></div>
-					</div>
+                    <div id="toolBar">
+                        <div class="tool brush"></div>
+                        <div class="tool pencil"></div>
+                        <div class="tool size"></div>
+                        <div class="tool color"></div>
+                        <!-- line tool Slider Style -->
+                        <div class="tool line">
+                            <button id="lineButton">Line Size</button>
+                                <div class="sliderDropdown" id="sliderDropdown">
+                                    <input id="lineSlider" type="range" min="1" max="30" value="5"/>
+                                </div>
+                        </div>
+                        <!-- line tool Dropdown Style -->
+                        <!--
+                            <select id="lineType">
+                                <option id="smallLine" value="10">Small</option>
+                                <option id="mediumLine" value="20">Medium</option>
+                                <option id="largeLine" value="30">Large</option>
+                            </select>
+                        -->
+                    </div>
 					<canvas id="mainCanvas" height="753" width="1800"></canvas>
 					<canvas id="previewCanvas" height="753" width="1800"></canvas>
 				</div>

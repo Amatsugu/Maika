@@ -121,6 +121,67 @@ body
 	padding-left: 10px;
 }
 
+/* Brush icon */
+#toolBar .brush
+{
+    background-image: url("/res/img/brush.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Pencil icon */
+#toolBar .pencil
+{
+    background-image: url("/res/img/pencil.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#toolBar .line
+{
+    background-color: rgba(173, 140, 186, 0) !important;
+}
+
+/* Line Button */
+#lineButton
+{
+    margin-top: 5px;
+    background: #ad8cba;
+    box-shadow: 0 2px 0 0 #ad8cba;
+    color: #fff;
+    text-shadow: 0 1px #ad8cba;
+    line-height: 25px;
+    width: 125px;
+    height: 40px;
+}
+
+#lineButton:hover
+{
+    background: #a26eb7;
+}
+
+/* Line Slider */
+#lineSlider
+{
+    margin-top: 0px;
+    background-color: rgba(173, 140, 186, 0) !important;
+    box-shadow: none !important;
+    position: relative;
+}
+
+/* Line Dropdown */
+#sliderDropdown
+{
+    display: none;
+	padding: 5px;
+	background-color: #fdecff;
+	position: absolute;
+	height: 40px;
+	width: 190px;
+}
+
 #toolBar .tool
 {
 	height: 48px;
@@ -291,3 +352,5 @@ canvas
 	grid-area: H;
 }
 
+
+/* Slider CSS */
