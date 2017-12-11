@@ -84,7 +84,7 @@ function DrawToolPreview(e)
 	if(brushShape == "round")
 		Circle(previewContext, e.clientX - mCanvas.offset().left, e.clientY - mCanvas.offset().top, size/2, color, true, false);
 	else
-		Rect(previewContext, (e.clientX - mCanvas.offset().left) * xScale, (e.clientY - mCanvas.offset().top) * yScale, size, size, color, true, false);
+		Rect(previewContext, ((e.clientX - mCanvas.offset().left) * xScale) - (size/2), ((e.clientY - mCanvas.offset().top) * yScale) - (size/2), size, size, color, true, false);
 }
 
 function MouseDown(e)
