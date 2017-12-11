@@ -26,12 +26,6 @@
                         <div class="tool size"></div>
                         <div class="tool color"></div>
                         <!-- line tool Slider Style -->
-                        <div class="tool line">
-                            <button id="lineButton">Line Size</button>
-                                <div class="sliderDropdown" id="sliderDropdown">
-                                    <input id="lineSlider" type="range" min="1" max="30" value="5"/>
-                                </div>
-                        </div>
                         <!-- line tool Dropdown Style -->
                         <!--
                             <select id="lineType">
@@ -53,7 +47,7 @@
 					<div class="icon invite">+</div>
 				</div>
 			</div>
-			<div id="colorDropdown">
+			<div id="colorDropdown" class="float">
 				<canvas id="color" height="256" width="256"></canvas>
 				<div id="hue"></div>
 				<div id="rgb">
@@ -66,6 +60,10 @@
 					<label>Hex</label>
 					<input id="hexInput" type="text" readonly/>
 				</div>
+			</div>
+			<div class="float" id="sizeDropdown">
+				<label>Size</label><br>
+				<input id="sizeSlider" type="range" min="1" max="500" value="5"/>
 			</div>
 		</div>
 		<div id="inviteWrapper">

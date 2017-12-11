@@ -1,5 +1,5 @@
-var brush, pencil, colorPicker;
-var colorWindow;
+var brush, pencil, colorPicker, sizePicker;
+var colorWindow, sizeWindow;
 var hue;
 var colorCanvas;
 var colorCtx;
@@ -8,7 +8,7 @@ var sH = 300;
 var bLColor = [1, 0, 0, 1];
 var sX, sY;
 var hR, hG, hB, hex;
-var open = false;
+var cOpen = false, sOpen = false;
 var outlineColor;
 $(document).ready(()=>{
 	brush = $(".brush").click(e=>{
@@ -20,12 +20,16 @@ $(document).ready(()=>{
 	h = w = 256;
 	sX = sY = 128;
 	colorPicker = $(".color").click(e=>{
-		if(!open)
+		if(!cOpen)
 			colorWindow.fadeIn();
 		else
 			colorWindow.fadeOut();
-		open = !open;
+		sizeWindow.fadeOut();
+		sOpen = false;
+		cOpen = !cOpen;
 	});
+	colorWindow = $("#colorDropdown");
+	sizeWindow = $("#sizeDropdown");
 	hue = $("#hue");
 	hR = $("#rgb #r");
 	hG = $("#rgb #g");
@@ -36,12 +40,38 @@ $(document).ready(()=>{
 		quadGradient();
 		DrawSelector(sX, sY);*/
 	});
-	colorWindow = $("#colorDropdown").css("display", "grid").hide();
+	/* Toggle #sliderDropDown */
+   	sizePicker =  $(".size").click(e=>{
+		if(!sOpen)
+			sizeWindow.fadeIn();
+		else
+			sizeWindow.fadeOut();
+		colorWindow.fadeOut();
+		cOpen = false;
+		sOpen = !sOpen;
+    });
+
+    /* Update size value on change */
+    $("#sizeSlider").on('change click', function () {
+        size = $(this).val();
+    });
+
+    /*$("#lineSlider").click(function () {
+        size = parseInt($("#lineSlider").val());
+        $("#lineSlider").trigger('change');
+    });*/
+
+	
+	$(".float").css("display", "grid").hide();
 	colorCanvas = $("#colorDropdown #color");
 	colorCtx = colorCanvas[0].getContext("2d");
 	colorWindow.css({
 		left:colorPicker.offset().left,
-		top:colorPicker.offset().top + 50
+		top:colorPicker.offset().top + 60
+	});
+	sizeWindow.css({
+		left:sizePicker.offset().left,
+		top:sizePicker.offset().top + 60
 	});
 	hue.on("mousedown mousemove", e =>{
 		if(e.buttons != 1)

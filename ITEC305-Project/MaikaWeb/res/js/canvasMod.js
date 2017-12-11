@@ -60,20 +60,7 @@ $(document).ready(function() //TODO: Capture states for network transmition
 		previewContext.clearRect(0, 0, cW, cH);
     });
 
-    /* Toggle #sliderDropDown */
-    $("#lineButton").click(function () {
-        $("#sliderDropdown").toggle();
-    });
-
-    /* Update size value on change */
-    $("#lineSlider").on('change', function () {
-        var size = $(this).val();
-    });
-
-    $("#lineSlider").click(function () {
-        size = parseInt($("#lineSlider").val());
-        $("#lineSlider").trigger('change');
-    });
+    
 
     /* line tool Dropdown Style */
     /*
@@ -110,7 +97,7 @@ function MouseDown(e)
 	if(brushShape == "round")
 		Circle(mContext, x2, y2, size/2, color, true);
 	else
-		Rect(mContext, x2 * xScale, y2 * yScale, size, size, color, true);
+		Rect(mContext, (x2 * xScale) - (size/2), (y2 * yScale) - (size/2), size, size, color, true);
 }
 
 function MouseMove(e)
