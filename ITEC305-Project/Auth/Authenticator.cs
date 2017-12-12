@@ -1,12 +1,12 @@
-using ITEC305_Project.Extensions;
-using ITEC305_Project.Models;
+using Maika.Extensions;
+using Maika.Models;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Security.Claims;
 using System.Text;
 
-namespace ITEC305_Project.Auth
+namespace Maika.Auth
 {
     public class Authenticator
     {

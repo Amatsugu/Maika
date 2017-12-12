@@ -1,0 +1,85 @@
+#registerForm
+{
+	display: grid;
+	grid-template-columns: 140px repeat(2, 100px);
+	grid-template-rows: repeat(4, 40px) 20px 40px;
+	grid-gap: 20px;
+	margin: 20px;
+	grid-template-areas: "UserLabel Username Username"
+						 "EmailLabel Email Email"
+						 "PasswordLabel Password Password"
+						 "PasswordLabel2 Password2 Password2"
+						 ". Login ."
+						 ". Register .";
+	
+}
+
+@media only screen and (max-width: 695px)
+{
+	#registerForm
+	{
+		grid-template-columns: 140px repeat(2, 80px);
+	}
+}
+
+#logo
+{
+	grid-area: Logo;
+	border-radius: 10px;
+	background-color: #ac8bb9;
+	background-image: url("/res/img/Default User Icon.png");
+	background-size: contain;
+	filter: drop-shadow(0px 0px 10px #ac8bb9);
+}
+
+#userLabel
+{
+	grid-area: UserLabel;
+}
+
+#user
+{
+	grid-area: Username;
+}
+
+#emailLabel
+{
+	grid-area: EmailLabel;
+}
+
+#email
+{
+	grid-area: Email;
+}
+
+#passLabel
+{
+	grid-area: PasswordLabel;
+}
+
+#pass
+{
+	grid-area: Password;
+}
+
+#passLabel2
+{
+	grid-area: PasswordLabel2;
+}
+
+#pass2
+{
+	grid-area: Password2;
+}
+
+#submit
+{
+	grid-area: Register;
+}
+
+#login
+{
+	color: #473a4d;
+	grid-area: Login;
+	text-align: center;
+}

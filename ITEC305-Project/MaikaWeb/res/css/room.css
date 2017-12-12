@@ -1,0 +1,336 @@
+body
+{
+	display: grid;
+	grid-template-areas: "Main";
+	height: 100%;
+	width: 100%;
+	position: fixed;
+}
+
+#wrapper
+{
+	grid-area: Main;
+	--headerHeight:150px;
+	display: grid;
+	grid-auto-columns: 1fr 100px;
+	grid-template-rows: var(--headerHeight) auto;
+	grid-template-areas: "Title Sidebar"
+						 "Modal Sidebar";
+	justify-content: unset;
+	align-items: unset;
+	transition: filter .5s;
+}
+
+#inviteWrapper
+{
+	display: none;
+	justify-content: center;
+	align-items: center;
+	z-index: 1;
+	background-color: rgba(0, 0, 0, .50);
+}
+
+#inviteWrapper #inviteModal
+{
+	width: 700px;
+	height: auto;
+	overflow: hidden;
+	background-color: rgba(235, 235, 235, .40);
+	border-radius: 10px;
+	display: grid;
+	grid-template-rows: 48px auto;
+	grid-template-columns: 1fr;
+	grid-template-areas: "Title"
+						 "Content";
+}
+
+#inviteModal #titleBar
+{
+	background-color: #b379ca;
+	text-align: center;
+	line-height: 48px;
+	grid-area: Title;
+	font-size: 20px;
+}
+
+#inviteModal #inviteForm
+{
+	grid-area: Content;
+	display: grid;
+	grid-template-columns: 1fr 1fr 50px;
+	grid-template-rows: 100px 50px;
+	grid-row-gap: 10px;
+	grid-template-areas: "Invite Invite Invite"
+						 ". Label Check";
+	padding: 20px;
+}
+
+#inviteLink
+{
+	grid-area: Invite;
+	font-size: 28px;
+	text-align: center;
+}
+
+#publicLabel
+{
+	grid-area: Label;
+	padding: 10px;
+	font-size: 20px;
+	text-align: right;
+}
+
+#public
+{
+	height: 50px;
+	width: 50px;
+	grid-area: Check;
+}
+
+#wrapper #blurBG
+{
+	grid-area: Modal;
+	margin: 20px 0px 0px 20px;
+	border-bottom-right-radius: 0px; 
+	border-bottom-left-radius: 0px; 
+}
+
+.modal
+{
+	min-height: unset;
+	min-width: unset;
+	padding: 0;
+	display: grid;
+	grid-template-rows: 64px auto;
+	grid-template-areas: "Tools"
+						 "Canvas";
+	justify-content: unset;
+	align-items: unset;
+	overflow: hidden;
+	height: 100%;
+	width:100%;
+}
+
+#toolBar
+{
+	grid-area: Tools;
+	background-color: rgba(173, 140, 186, 0.5);
+	width: 100%;
+	display: flex;
+	align-items: center;
+	padding-left: 10px;
+}
+
+/* Brush icon */
+#toolBar .brush
+{
+    background-image: url("/res/img/brush.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Pencil icon */
+#toolBar .pencil
+{
+    background-image: url("/res/img/pencil.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+/* Line Slider */
+#sizeSlider
+{
+    margin-top: 0px;
+    background-color: rgba(173, 140, 186, 0) !important;
+    box-shadow: none !important;
+	padding: 0px;
+}
+
+/* Line Dropdown */
+#sizeDropdown
+{
+	background-color: #fdecff;
+}
+
+#toolBar .tool
+{
+	height: 48px;
+	width: 48px;
+	background-color: #8ae1e4;
+	margin-right: 10px;
+}
+
+canvas::selection
+{
+	background-color: transparent;
+}
+
+canvas
+{
+	grid-area: Canvas;
+	width: 100%;
+	height: 100%;
+	cursor: none;
+}
+
+#title
+{
+	grid-area: Title;
+	background-color: transparent;
+	border: 0;
+	font-size: 64px;
+	height: 64px;
+	padding: 0;
+	padding-top: calc(var(--headerHeight) - 64px);
+	padding-left: 20px;
+	color: #b379ca;
+}
+
+#sideBar
+{
+	grid-area: Sidebar;
+	display: grid;
+	grid-template-rows: calc(var(--headerHeight) + 20px) auto;
+	grid-template-areas: "Leave"
+						 "Users";
+}
+
+#sideBar #leaveButton
+{
+	grid-area: Leave;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: calc(var(--headerHeight) - 64px);
+}
+
+#sideBar #userList
+{
+	grid-area: Users;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+
+#sideBar .icon
+{
+	margin-bottom: 20px;
+	border-radius: 50%;
+	height: 64px;
+	width: 64px;
+	background-color: #8ae1e4;
+	line-height: 64px;
+	text-align: center;
+	overflow: hidden;
+}
+
+#sideBar .leave
+{
+	background-color: #500;
+	color: #fff;
+}
+
+#toolBar .color
+{
+	outline: 1px solid #b379ca;
+
+}
+
+#colorDropdown
+{
+	
+	grid-template-columns: auto;
+	grid-template-rows: 256px auto auto auto;
+	grid-row-gap: 5px;
+	grid-template-areas: "Color"
+						 "Hue"
+						 "RGB"
+						 "HEX";
+	background-color: #fdecff;
+	
+}
+
+.float
+{
+	display: none;
+	padding: 10px;
+	position: absolute;
+	height: auto;
+	width: 256px;
+	border-radius: 10px;
+}
+
+#colorDropdown #color
+{
+	grid-area: Color;
+	height: 256px;
+	width: 256px;
+	cursor: crosshair;
+}
+
+#colorDropdown #hue
+{
+	grid-area: Hue;
+	box-shadow: none;
+	background: linear-gradient(to right, #f00 0%,#ff0 14.3%,#0f0 28.6%,#0ff 42.9%, #00f 57.1%, #f0f 71.4%, #f00 100%);
+	height: 30px;
+}
+
+#colorDropdown #rgb
+{
+	grid-area: RGB;
+	display: grid;
+	grid-template-columns: repeat(4, auto);
+	grid-template-areas: "RGB R G B";
+}
+
+#colorDropdown #rgb
+{
+	grid-area: RGB;
+}
+
+#colorDropdown #rgb input:nth-of-type(1)
+{
+	grid-area: R;
+}
+
+#colorDropdown #rgb input:nth-of-type(2)
+{
+	grid-area: G;
+}
+
+#colorDropdown #rgb input:nth-of-type(3)
+{
+	grid-area: B;
+}
+
+
+#colorDropdown #rgb input
+{
+	width: 50px;
+}
+
+#colorDropdown #hex
+{
+	grid-area: HEX;
+	display: grid;
+	grid-template-columns: 50px auto;
+	grid-template-areas: "HEX H";
+}
+
+#colorDropdown #hex label
+{
+	grid-area: HEX;
+}
+
+#colorDropdown #hex input
+{
+	grid-area: H;
+}
+
+
+/* Slider CSS */

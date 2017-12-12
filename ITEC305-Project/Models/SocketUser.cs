@@ -1,15 +1,15 @@
 ﻿using Newtonsoft.Json;
-using SuperWebSocket;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WebSockets;
 
-namespace ITEC305_Project.Models
+namespace Maika.Models
 {
     public class SocketUser
     {
 		[JsonIgnore]
-		public WebSocketSession Session { get; set; }
+		public WebSocket Session { get; set; }
 		public string RoomId { get; set; }
 		public string UserId { get; set; }
 		public string Username { get; set; }

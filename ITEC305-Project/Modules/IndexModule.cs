@@ -4,21 +4,20 @@ using System.Text;
 using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Security;
-using ITEC305_Project.Models;
+using Maika.Models;
 
-namespace ITEC305_Project.Modules
+namespace Maika.Modules
 {
     public class IndexModule : NancyModule
     {
 		public IndexModule()
 		{
-			StatelessAuthentication.Enable(this, Maika.StatelessConfig);
-			this.RequiresAuthentication();
+			StatelessAuthentication.Enable(this, MaikaCore.StatelessConfig);
 			Get("/", _ =>
 			{
-				Console.WriteLine(Context?.CurrentUser.Identity.Name);
-				return "";
-				//return View["index", new { user = Context.CurrentUser}];
+				if (Context.CurrentUser != null)
+					return Response.AsRedirect("/r/");
+				return View["login"];
 			});
 		}
 	}

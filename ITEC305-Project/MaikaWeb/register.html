@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Register</title>
+		<meta name="theme-color" content="##f4d4f8">
+		<link rel="stylesheet" href="/res/css/main.css">
+		<link rel="stylesheet" href="/res/css/register.css">		
+		<link rel="stylesheet" href="/res/css/form.css">
+		<script src="/res/js/jquery-3.1.1.min.js"></script>
+		<script src="/res/js/register.js"></script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<div id="blurBG">
+				<div class="modal">
+					<div id="head" src="#"></div>
+					<form action="/auth/register" method="POST">
+						<div id="registerForm">
+							<label id="userLabel">Username</label>
+							<input id="user" name="Username" placeholder="Username" required>
+							<label id="emailLabel">Email</label>
+							<input id="email" name="Email" placeholder="Email Adress" type="email" required>
+							<label id="passLabel">Password</label>
+							<input id="pass" name="Password" type="password" placeholder="Password" required>
+							<label id="passLabel2">Confirm Password</label>
+							<input id="pass2" name="Password2" type="password" placeholder="Password" required>
+							<a id="login" href="/">Login</a>
+							<button id="submit" type="submit">Register</button>
+						</div>
+					</form>				
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

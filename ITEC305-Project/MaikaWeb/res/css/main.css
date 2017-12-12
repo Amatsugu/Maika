@@ -1,0 +1,72 @@
+::selection
+{
+	background: #fff;
+	color: #000;
+}
+
+body
+{
+	font-family: sans-serif;
+	background-color: #333;
+	margin: 0;
+}
+
+#wrapper
+{
+	background-image: url("/res/img/bg.png");
+	background-repeat:no-repeat;
+	background-position: center;
+	background-attachment: fixed;
+	background-size: cover;	
+	position: fixed;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	width: 100%;
+}
+
+#wrapper #blurBG
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 20px;
+	background-image: url("/res/img/bgBlur.png");
+	background-size: cover;		
+	background-repeat:no-repeat;
+	background-position: center;
+	background-attachment: fixed;
+	overflow: hidden;
+}
+
+.modal
+{
+	padding: 20px;
+	min-width: 695px;
+	min-height: 389px;
+	background-color: rgba(235, 235, 235, .10);
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+	justify-content: center;
+	align-items: center;
+}
+
+@media only screen and (max-width: 695px)
+{
+	#wrapper #blurBG
+	{
+		width: 100%;
+		border-radius: 0px;
+	}
+
+	.modal
+	{
+		border-radius: 0px;
+		min-width: 0px;
+		width:100%;
+	}
+}

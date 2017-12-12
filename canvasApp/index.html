@@ -5,7 +5,8 @@
 	<head>
 		<title>Canvas Demo</title>
 		<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="js/jquery-3.1.1.min.js"></script>
+		<script src="js/socketConnection.js" charset="utf-8"></script>
 		<script src="js/canvasMod.js" charset="utf-8"></script>
 		<script src="js/colorMod.js" charset="utf-8"></script>
 		<script src="js/brushSizeMod.js" charset="utf-8"></script>
@@ -14,7 +15,10 @@
 	<body>
 		<h1 align="center">jQuery Simple Draw App Demo</h1>
 		<div class = "chatbox"></div>
-		<canvas	width="900" height="540"></canvas>
+		<div id="canvas">
+			<canvas id="mainCanvas" width="900" height="540"></canvas>
+			<canvas	id="previewCanvas" width="900" height="540"></canvas>
+		</div>
 		<div class="control">
 			<ul class = "colorList">
 				<li class = "red"> </li>
@@ -23,7 +27,7 @@
 				<li class = "white"> </li>
 				<li class = "orange"> </li>
 				<li class = "green"> </li>
-				<li class = "black"> </li>
+				<li class = "black selected"> </li>
 				<li class = "purple"> </li>
 			</ul>
 			<button id="revealColorSelect">New Color</button>

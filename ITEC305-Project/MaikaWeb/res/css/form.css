@@ -1,0 +1,60 @@
+#head
+{
+	background-color: #f0f;
+	width: 613px;
+	height: 114px;
+}
+
+
+@media only screen and (max-width: 695px)
+{
+	#head
+	{
+		width: calc(100% - 60px);
+	}
+}
+
+input
+{
+	border-radius: 10px;
+	background-color: #f4d4f880;
+	padding: 10px;
+	border: 0px;
+	border: 1px solid transparent;
+	transition: background-color .5s, border .5s;
+	box-shadow: inset 3px 3px 3px rgba(0, 0, 0, 0.315);
+	outline: none;
+}
+
+button
+{
+	background-color: #a6a6a6;
+	border: 0px;
+	padding: 10px;
+	border-radius: 10px;
+	transition: background-color .5s;
+	color: #000;
+}
+
+button:hover, 
+button:focus
+{
+	background-color: #707070;
+}
+
+input:hover, 
+input:focus
+{
+	background-color: rgba(244, 212, 248, 1);
+}
+
+
+label
+{
+	line-height: 40px;
+}
+
+.error
+{
+	border: 1px solid #f00;
+}

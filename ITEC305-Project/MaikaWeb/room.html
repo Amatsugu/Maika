@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>@Model.Name</title>
+		<link rel="stylesheet" href="/res/css/main.css">
+		<link rel="stylesheet" href="/res/css/form.css">
+		<link rel="stylesheet" href="/res/css/room.css">
+		<script src="/res/js/jquery-3.1.1.min.js"></script>
+		<script src="/res/js/canvasMod.js"></script>
+		<script src="/res/js/socketConnection.js"></script>
+		<script src="/res/js/invite.js"></script>
+		<script src="/res/js/tools.js"></script>
+		<meta name="theme-color" content="##f4d4f8">
+	</head>
+	<body>
+		<div id="wrapper">
+			<input id="title" type="text" value="@Model.Name">
+			<div id="blurBG">
+				<div class="modal">
+                    <div id="toolBar">
+                        <div class="tool brush"></div>
+                        <div class="tool pencil"></div>
+                        <div class="tool size"></div>
+                        <div class="tool color"></div>
+                        <!-- line tool Slider Style -->
+                        <!-- line tool Dropdown Style -->
+                        <!--
+                            <select id="lineType">
+                                <option id="smallLine" value="10">Small</option>
+                                <option id="mediumLine" value="20">Medium</option>
+                                <option id="largeLine" value="30">Large</option>
+                            </select>
+                        -->
+                    </div>
+					<canvas id="mainCanvas" height="753" width="1800"></canvas>
+					<canvas id="previewCanvas" height="753" width="1800"></canvas>
+				</div>
+			</div>
+			<div id="sideBar">
+				<div id="leaveButton">
+					<div class="icon leave">Leave</div>
+				</div>
+				<div id="userList">
+					<div class="icon invite">+</div>
+				</div>
+			</div>
+			<div id="colorDropdown" class="float">
+				<canvas id="color" height="256" width="256"></canvas>
+				<div id="hue"></div>
+				<div id="rgb">
+					<label>RGB</label>
+					<input id="r" type="number" readonly/>
+					<input id="g" type="number" readonly/>
+					<input id="b" type="number" readonly/>
+				</div>
+				<div id="hex">
+					<label>Hex</label>
+					<input id="hexInput" type="text" readonly/>
+				</div>
+			</div>
+			<div class="float" id="sizeDropdown">
+				<label>Size</label><br>
+				<input id="sizeSlider" type="range" min="1" max="500" value="5"/>
+			</div>
+		</div>
+		<div id="inviteWrapper">
+			<div id="inviteModal">
+				<div id="titleBar">Invite Link</div>
+				<div id="inviteForm">
+					<input id="inviteLink" type="text" readonly>
+					<input id="public" type="checkbox">
+					<label id="publicLabel">Make Public</label>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

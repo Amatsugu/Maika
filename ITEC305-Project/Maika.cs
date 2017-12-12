@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Claims;
-using ITEC305_Project.Models;
-using ITEC305_Project.Auth;
+using Maika.Models;
+using Maika.Auth;
 using Npgsql;
 
-namespace ITEC305_Project
+namespace Maika
 {
-	public static class Maika
+	public static class MaikaCore
 	{
 		public const string HOST = "maika.luminousvector.com";
 		private static readonly DBCredentials dBCredentials = DBCredentials.FromJSON("DB_Credentials.json");
@@ -30,7 +30,6 @@ namespace ITEC305_Project
 				return null;
 			}
 		});
-
 
 		private static T RunCommand<T>(Func<NpgsqlCommand, T> func)
 		{
@@ -73,7 +72,7 @@ namespace ITEC305_Project
 
 		internal static UserModel GetUser(string userId) => RunCommand(cmd =>
 		{
-			cmd.CommandText = $"SELECT username FROM users WHERE user_id = '{userId}'";
+			cmd.CommandText = $"SELECT username, room_id FROM users u, room_member r WHERE u.user_id = '{userId}' AND r.user_id = '{userId}'";
 			using (var reader = cmd.ExecuteReader())
 			{
 				if (!reader.HasRows)
@@ -82,7 +81,8 @@ namespace ITEC305_Project
 				return new UserModel
 				{
 					Id = userId,
-					Username = Uri.UnescapeDataString(reader.GetString(0))
+					Username = Uri.UnescapeDataString(reader.GetString(0)),
+					RoomId = reader.GetString(1)
 				};
 			}
 		});
@@ -111,7 +111,6 @@ namespace ITEC305_Project
 				LeaveRoom(owner);
 			var id = Authenticator.GenerateToken();
 			cmd.CommandText = $"INSERT INTO room (room_id, owner_id, title) VALUES('{id}', '{owner.Id}', 'New Room');";
-			cmd.CommandText += $"DELETE FROM room_member WHERE user_id = '{owner.Id}';";
 			cmd.CommandText += $"INSERT INTO room_member VALUES('{id}',  '{owner.Id}');";
 			cmd.ExecuteNonQuery();
 			var u = GetUser(owner.Id);
@@ -147,7 +146,7 @@ namespace ITEC305_Project
 		{
 			if (user.RoomId != null)
 				LeaveRoom(user);
-			cmd.CommandText = $"INSERT INTO room_member (room_id, user_id) VALUES ({roomID}, {user.Id})";
+			cmd.CommandText = $"INSERT INTO room_member VALUES('{roomID}', '{user.Id}')";
 			return cmd.ExecuteNonQuery() > 0;
 		});
 
@@ -192,7 +191,7 @@ namespace ITEC305_Project
 
 		internal static bool SetRoomName(string roomId, string userId, string roomName) => RunCommand(cmd =>
 		{
-			cmd.CommandText = $"UPDATE room SET title = '{Uri.EscapeDataString(roomName)}' WHERE room_id = '{roomId}' AND owner_id = '{userId}'";
+			cmd.CommandText = $"UPDATE room SET title = '{Uri.EscapeDataString(roomName ?? "")}' WHERE room_id = '{roomId}'";
 			return cmd.ExecuteNonQuery() > 0;
 		});
 
@@ -208,8 +207,10 @@ namespace ITEC305_Project
 			return cmd.ExecuteNonQuery() > 0;
 		});
 
-		internal static InviteModel CreateInvite(string roomId) => RunCommand(cmd =>
+		internal static InviteModel CreateInvite(string roomId, UserPrincipal user) => RunCommand(cmd =>
 		{
+			if (GetRoomMembership(user.Id) != roomId)
+				return null;
 			var invite = Authenticator.GenerateToken();
 			cmd.CommandText = $"INSERT INTO invite VALUES ('{invite}', '{roomId}')";
 			cmd.ExecuteNonQuery();
@@ -219,6 +220,25 @@ namespace ITEC305_Project
 				RoomId = roomId
 			};
 		});
+
+		internal static InviteModel GetInvite(string inviteId) => RunCommand(cmd =>
+		{
+			cmd.CommandText = $"SELECT room_id FROM invite WHERE invite_id = '{inviteId}'";
+			try
+			{
+				return new InviteModel
+				{
+					Id = inviteId,
+					RoomId = cmd.ExecuteScalar() as string
+				};
+			}catch
+			{
+				return null;
+			}
+		});
+
+		internal static bool AcceptInvite(UserPrincipal user, InviteModel invite) => JoinRoom(user, invite.RoomId);
+			
 
 		internal static bool DeleteInvite(string inviteId) => RunCommand(cmd =>
 		{
