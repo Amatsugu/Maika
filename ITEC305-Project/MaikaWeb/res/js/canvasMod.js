@@ -89,9 +89,9 @@ function DrawToolPreview(e)
 	}else
 	{
 		if(brushShape == "round")
-		Circle(previewContext, e.clientX - mCanvas.offset().left, e.clientY - mCanvas.offset().top, size/2, color, true, false);
+			Circle(previewContext, e.clientX - mCanvas.offset().left, e.clientY - mCanvas.offset().top, size/2, color, true, false);
 		else
-		Rect(previewContext, ((e.clientX - mCanvas.offset().left) * xScale) - (size/2), ((e.clientY - mCanvas.offset().top) * yScale) - (size/2), size, size, color, true, false);
+			Rect(previewContext, (e.clientX - mCanvas.offset().left), e.clientY - mCanvas.offset().top, size, size, color, true, true, false);
 	}
 }
 
@@ -110,7 +110,7 @@ function MouseDown(e)
 		if(brushShape == "round")
 			Circle(mContext, x2, y2, size/2, color, true);
 		else
-			Rect(mContext, (x2 * xScale) - (size/2), (y2 * yScale) - (size/2), size, size, color, true);
+			Rect(mContext, x2, y2, size, size, color, true, true);
 	}
 }
 
@@ -139,11 +139,18 @@ function MouseOut(e)
 	//flag = false;
 }
 
-function Brush(context, x1, y1, x2, y2, size, color, cap = "round", send = true)
+function Brush(context, x1, y1, x2, y2, size, color, cap = "round", send = true, scale = true)
 {
 	context.beginPath();
-	context.moveTo((x1 + window.scrollX) * xScale, (y1 + window.scrollY) * yScale);
-	context.lineTo((x2 + window.scrollX) * xScale, (y2 + window.scrollY) * yScale);
+	if(scale)
+	{
+		x1 = (x1 + window.scrollX) * xScale;
+		x2 = (x2 + window.scrollX) * xScale;
+		y1 = (y1 + window.scrollY) * yScale;
+		y2 = (y2 + window.scrollY) * yScale;
+	}
+	context.moveTo(x1, y1);
+	context.lineTo(x2, y2);
 	context.lineJoin = context.lineCap = cap;
 	context.lineWidth = size;	
 	context.strokeStyle = color;
@@ -171,11 +178,16 @@ function Brush(context, x1, y1, x2, y2, size, color, cap = "round", send = true)
 }
 
 
-function Circle(context, x, y, r, color, filled = false, send = true)
+function Circle(context, x, y, r, color, filled = false, send = true, scale = true)
 {
 	context.beginPath();
 	context.fillStyle = color;
-	context.arc((x + window.scrollX) * xScale, (y + window.scrollY) * yScale, size/2, 0, 2 * Math.PI);
+	if(scale)
+	{
+		x = (x + window.scrollX) * xScale;
+		y = (y + window.scrollY) * yScale;
+	}
+	context.arc(x, y, r, 0, 2 * Math.PI);
 	if(filled)
 		context.fill();
 	else
@@ -188,19 +200,29 @@ function Circle(context, x, y, r, color, filled = false, send = true)
 		type:"circle",
 		p:
 		{
-			x:x1,
-			y:y1
+			x:x,
+			y:y
 		},
 		color:color,
-		size:size,
+		size:r,
 		filled:filled
 	});
 }
 
-function Rect(context, x, y, h, w, color, filled  = false, send = true)
+function Rect(context, x, y, h, w, color, filled  = false, centered = false, send = true, scale = true)
 {
 	context.beginPath();
 	context.fillStyle = color;
+	if(scale)
+	{
+		x = (x + window.scrollX) * xScale;
+		y = (y + window.scrollY) * yScale;
+	}
+	if(centered)
+	{
+		x -= w/2;
+		y -= h/2;
+	}
 	if(filled)
 		context.fillRect(x, y, w, h);
 	else
@@ -213,8 +235,8 @@ function Rect(context, x, y, h, w, color, filled  = false, send = true)
 			type:"rect",
 			p:
 			{
-				x:x1,
-				y:y1
+				x:x,
+				y:y
 			},
 			color:color,
 			size:{
@@ -227,5 +249,5 @@ function Rect(context, x, y, h, w, color, filled  = false, send = true)
 
 function Clear(context, clearColor)
 {
-	Rect(context, 0, 0, cH, cW, clearColor, true, false);
+	Rect(context, 0, 0, cH, cW, clearColor, true, false, false, false);
 }

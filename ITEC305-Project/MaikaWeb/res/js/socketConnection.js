@@ -54,10 +54,14 @@ $(document).ready(function(){
 					switch(e.type)
 					{
 						case "circle":
-							Circle(mContext, e.p.x, e.p.y, e.r, e.color, e.filled, false);
+							Circle(mContext, e.p.x, e.p.y, e.size, e.color, e.filled, false, false);
 							break;
 						case "line":
-							Brush(mContext, e.p1.x, e.p1.y, e.p2.x, e.p2.y, e.size, e.color,e.cap, false);
+							Brush(mContext, e.p1.x, e.p1.y, e.p2.x, e.p2.y, e.size, e.color,e.cap, false, false);
+							break;
+						case "rect":
+							Rect(mContext, e.p.x, e.p.y, e.size.h, e.size.w, e.color, e.filled, false, false);
+							break;
 					}
 				}
 				break;
