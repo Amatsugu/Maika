@@ -13,6 +13,7 @@ var capturedEvents;
 var interval = 1000 * .2;
 var cH, cW;
 var brushShape = "round";
+var isEraser = false;
 
 $(document).ready(function() //TODO: Capture states for network transmition
 {
@@ -81,10 +82,17 @@ $(document).ready(function() //TODO: Capture states for network transmition
 function DrawToolPreview(e)
 {
 	previewContext.clearRect(0, 0, cW, cH);
-	if(brushShape == "round")
+	if(isEraser)
+	{
+		Circle(previewContext, e.clientX - mCanvas.offset().left, e.clientY - mCanvas.offset().top, size/2, "#000", false, false);
+		
+	}else
+	{
+		if(brushShape == "round")
 		Circle(previewContext, e.clientX - mCanvas.offset().left, e.clientY - mCanvas.offset().top, size/2, color, true, false);
-	else
+		else
 		Rect(previewContext, ((e.clientX - mCanvas.offset().left) * xScale) - (size/2), ((e.clientY - mCanvas.offset().top) * yScale) - (size/2), size, size, color, true, false);
+	}
 }
 
 function MouseDown(e)
@@ -94,10 +102,16 @@ function MouseDown(e)
 	x2 = e.clientX - mCanvas.offset().left;
 	y2 = e.clientY - mCanvas.offset().top;
 	flag = true;
-	if(brushShape == "round")
-		Circle(mContext, x2, y2, size/2, color, true);
-	else
-		Rect(mContext, (x2 * xScale) - (size/2), (y2 * yScale) - (size/2), size, size, color, true);
+	if(isEraser)
+	{
+		Circle(mContext, x2, y2, size/2, "#fff", true);
+	}else
+	{
+		if(brushShape == "round")
+			Circle(mContext, x2, y2, size/2, color, true);
+		else
+			Rect(mContext, (x2 * xScale) - (size/2), (y2 * yScale) - (size/2), size, size, color, true);
+	}
 }
 
 function MouseMove(e)
@@ -108,7 +122,10 @@ function MouseMove(e)
 		y1 = y2;
 		x2 = e.clientX - mCanvas.offset().left;
 		y2 = e.clientY - mCanvas.offset().top;
-		Brush(mContext, x1, y1, x2, y2, size, color, brushShape);
+		if(isEraser)
+			Brush(mContext, x1, y1, x2, y2, size, "#fff", "round");
+		else
+			Brush(mContext, x1, y1, x2, y2, size, color, brushShape);
 	}
 }
 
@@ -119,7 +136,7 @@ function MouseUp(e)
 
 function MouseOut(e)
 {
-	flag = false;
+	//flag = false;
 }
 
 function Brush(context, x1, y1, x2, y2, size, color, cap = "round", send = true)
@@ -161,6 +178,8 @@ function Circle(context, x, y, r, color, filled = false, send = true)
 	context.arc((x + window.scrollX) * xScale, (y + window.scrollY) * yScale, size/2, 0, 2 * Math.PI);
 	if(filled)
 		context.fill();
+	else
+		context.stroke();
 	context.closePath();
 	if(!send)
 		return;

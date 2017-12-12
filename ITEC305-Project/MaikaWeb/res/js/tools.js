@@ -1,4 +1,4 @@
-var brush, pencil, colorPicker, sizePicker;
+var brush, pencil, eraser, colorPicker, sizePicker;
 var colorWindow, sizeWindow;
 var hue;
 var colorCanvas;
@@ -13,10 +13,16 @@ var outlineColor;
 $(document).ready(()=>{
 	brush = $(".brush").click(e=>{
 		brushShape = "round";
+		isEraser = false;
 	});
 	pencil = $(".pencil").click(e=>{
 		brushShape = "square";
+		isEraser = false;
 	});
+	eraser = $(".eraser").click(e=>{
+		isEraser = true;
+	});
+
 	h = w = 256;
 	sX = sY = 128;
 	colorPicker = $(".color").click(e=>{

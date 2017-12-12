@@ -139,6 +139,13 @@ body
     background-repeat: no-repeat;
 }
 
+#toolBar .eraser
+{
+    background-image: url("/res/img/eraser.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 
 /* Line Slider */
 #sizeSlider
