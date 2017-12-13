@@ -1,6 +1,10 @@
 #head
 {
-	background-color: #f0f;
+	/*background-color: #f0f;*/
+	background-image: url("/res/img/Logo.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
 	width: 613px;
 	height: 114px;
 }
