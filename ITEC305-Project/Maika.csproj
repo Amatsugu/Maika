@@ -13,17 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="DB_Credentials.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Nancy" Version="2.0.0-Pre1892" />
     <PackageReference Include="Nancy.Authentication.Stateless" Version="2.0.0-Pre1892" />
     <PackageReference Include="Nancy.Hosting.Self" Version="2.0.0-Pre1892" />
     <PackageReference Include="Npgsql" Version="3.2.6" />
-    <PackageReference Include="WebSocketServer" Version="1.0.7" />
+    <PackageReference Include="WebSocketServer" Version="1.0.8" />
   </ItemGroup>
 
 </Project>
