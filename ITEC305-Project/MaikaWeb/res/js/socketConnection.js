@@ -3,7 +3,7 @@ var inviteButton;
 var title;
 var curUser;
 $(document).ready(function(){
-	var host = "wss://maikaws.luminousvector.com/";
+	var host = "wss://maikaws.kaisei.app/";
 	if(window.location.hostname.includes("localhost"))
 		host = "ws:localhost:4322";
 	maika = new WebSocket(host);
