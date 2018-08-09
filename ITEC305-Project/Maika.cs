@@ -12,7 +12,7 @@ namespace Maika
 {
 	public static class MaikaCore
 	{
-		public const string HOST = "maika.luminousvector.com";
+		public const string HOST = "maika.kaisei.app";
 		private static readonly DBCredentials dBCredentials = DBCredentials.FromJSON("DB_Credentials.json");
 
 		internal static StatelessAuthenticationConfiguration StatelessConfig { get; private set; } = new StatelessAuthenticationConfiguration(nancyContext =>
