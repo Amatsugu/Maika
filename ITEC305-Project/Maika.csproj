@@ -13,6 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="DB_Credentials.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Nancy" Version="2.0.0-pre1911" />
     <PackageReference Include="Nancy.Authentication.Stateless" Version="2.0.0-pre1911" />
     <PackageReference Include="Nancy.Hosting.Self" Version="2.0.0-pre1911" />
