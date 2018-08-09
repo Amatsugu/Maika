@@ -13,10 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nancy" Version="2.0.0-Pre1892" />
-    <PackageReference Include="Nancy.Authentication.Stateless" Version="2.0.0-Pre1892" />
-    <PackageReference Include="Nancy.Hosting.Self" Version="2.0.0-Pre1892" />
-    <PackageReference Include="Npgsql" Version="3.2.6" />
+    <PackageReference Include="Nancy" Version="2.0.0-pre1911" />
+    <PackageReference Include="Nancy.Authentication.Stateless" Version="2.0.0-pre1911" />
+    <PackageReference Include="Nancy.Hosting.Self" Version="2.0.0-pre1911" />
+    <PackageReference Include="Npgsql" Version="4.0.2" />
     <PackageReference Include="WebSocketServer" Version="1.0.8" />
   </ItemGroup>
 
