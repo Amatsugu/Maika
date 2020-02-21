@@ -32,6 +32,7 @@ namespace Maika.Bootstrap
 		public override void Configure(INancyEnvironment environment)
 		{
 			base.Configure(environment);
+			environment.Tracing(enabled: false, displayErrorTraces: true);
 
 #if DEBUG
 			environment.Views(runtimeViewUpdates: true);
