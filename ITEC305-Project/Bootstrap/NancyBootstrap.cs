@@ -59,7 +59,6 @@ namespace Maika.Bootstrap
 		}
 	}
 
-#if DEBUG
 	public class RootProvider : IRootPathProvider
 	{
 		public string GetRootPath()
@@ -67,6 +66,5 @@ namespace Maika.Bootstrap
 			return Directory.GetCurrentDirectory();
 		}
 	}
-#endif
 	
 }
