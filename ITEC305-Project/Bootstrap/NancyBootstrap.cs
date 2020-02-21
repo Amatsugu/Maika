@@ -62,7 +62,11 @@ namespace Maika.Bootstrap
 	{
 		public string GetRootPath()
 		{
+#if DEBUG
 			return Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+#else
+			return Directory.GetCurrentDirectory();
+#endif
 		}
 	}
 	
