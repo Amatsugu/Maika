@@ -13,7 +13,8 @@ namespace Maika.Bootstrap
 		{
 			HttpStatusCode.NotFound,
 			HttpStatusCode.Unauthorized,
-			HttpStatusCode.Checkpoint
+			HttpStatusCode.Checkpoint,
+			HttpStatusCode.InternalServerError
 		};
 
 		public void Handle(HttpStatusCode statusCode, NancyContext context)
