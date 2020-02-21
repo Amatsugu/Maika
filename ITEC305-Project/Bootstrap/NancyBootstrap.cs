@@ -46,12 +46,10 @@ namespace Maika.Bootstrap
 			});
 		}
 
-#if DEBUG
 		protected override IRootPathProvider RootPathProvider
 		{
 			get { return new RootProvider(); }
 		}
-#endif
 
 		protected override void ConfigureConventions(NancyConventions nancyConventions)
 		{
@@ -63,7 +61,7 @@ namespace Maika.Bootstrap
 	{
 		public string GetRootPath()
 		{
-			return Directory.GetCurrentDirectory();
+			return Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
 		}
 	}
 	
